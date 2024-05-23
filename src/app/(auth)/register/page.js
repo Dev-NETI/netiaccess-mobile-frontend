@@ -1,123 +1,81 @@
-'use client'
+"use client"
 
-import Button from '@/components/Button'
-import Input from '@/components/Input'
-import InputError from '@/components/InputError'
-import Label from '@/components/Label'
-import Link from 'next/link'
-import { useAuth } from '@/hooks/auth'
-import { useState } from 'react'
+import ProcessCard from "@/components/auth/register/ProcessCard"
+import { useEffect, useState } from "react"
+import ProcessCardProcessIndicator from "@/components/auth/register/ProcessCardProcessIndicator"
+import PersonalInfoForm from "@/components/auth/register/PersonalInfoForm"
+import AddressForm from "@/components/auth/register/AddressForm"
+import EmploymentForm from "@/components/auth/register/EmploymentForm"
+import CredentialForm from "@/components/auth/register/CredentialForm"
+import ContactForm from "@/components/auth/register/ContactForm"
+import { RegisterContext } from "@/stores/RegisterContext"
 
-const Page = () => {
-    const { register } = useAuth({
-        middleware: 'guest',
-        redirectIfAuthenticated: '/dashboard',
-    })
+function Register() {
+    const [currentState, setCurrentState] = useState(1);
+    const [traineeData, setTraineeData] = useState({});
 
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [passwordConfirmation, setPasswordConfirmation] = useState('')
-    const [errors, setErrors] = useState([])
+    // just log to check if traineedata is updating between forms, uncomment to check
+    useEffect(() => {
+        console.log(traineeData);
+    }, [traineeData]);
 
-    const submitForm = event => {
-        event.preventDefault()
+    function handleNextProcess() {
+        setCurrentState(currentState + 1);
+    }
 
-        register({
-            name,
-            email,
-            password,
-            password_confirmation: passwordConfirmation,
-            setErrors,
-        })
+    const activeForm = (currentState) => {
+        switch (currentState) {
+            case 1:
+                // return <PersonalInfoForm /> //this is the right form
+                return <ContactForm /> //for testing
+                break;
+            case 2:
+                return <AddressForm />
+                break;
+            case 3:
+                return <EmploymentForm />
+                break;
+            case 4:
+                return <ContactForm />
+                break;
+            case 5:
+                return <EmploymentForm />
+                break;
+            default:
+                return <CredentialForm />
+                break;
+        }
     }
 
     return (
-        <form onSubmit={submitForm}>
-            {/* Name */}
-            <div>
-                <Label htmlFor="name">Name</Label>
+        <div className="grid grid-cols-1">
+            <RegisterContext.Provider value={{ traineeData, setTraineeData, handleNextProcess }}>
 
-                <Input
-                    id="name"
-                    type="text"
-                    value={name}
-                    className="block mt-1 w-full"
-                    onChange={event => setName(event.target.value)}
-                    required
-                    autoFocus
-                />
+                <div className="col-span-1">
+                    <ProcessCard>
+                        {/* process indication */}
+                        <div className="flex flex-row gap-3">
+                            <ProcessCardProcessIndicator isActive={currentState === 1} processDescription="Personal" processNumber="1" />
+                            <ProcessCardProcessIndicator isActive={currentState === 2} processDescription="Address" processNumber="2" />
+                            <ProcessCardProcessIndicator isActive={currentState === 3} processDescription="Employment" processNumber="3" />
+                            <ProcessCardProcessIndicator isActive={currentState === 4} processDescription="Contact" processNumber="4" />
+                            <ProcessCardProcessIndicator isActive={currentState === 5} processDescription="Verify Contact" processNumber="5" />
+                            <ProcessCardProcessIndicator isActive={currentState === 6} processDescription="Password" processNumber="6" />
+                        </div>
 
-                <InputError messages={errors.name} className="mt-2" />
-            </div>
+                        {/* form */}
+                        <div className="flex flex-col gap-2 mt-5">
 
-            {/* Email Address */}
-            <div className="mt-4">
-                <Label htmlFor="email">Email</Label>
+                            {activeForm(currentState)}
 
-                <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    className="block mt-1 w-full"
-                    onChange={event => setEmail(event.target.value)}
-                    required
-                />
+                        </div>
 
-                <InputError messages={errors.email} className="mt-2" />
-            </div>
+                    </ProcessCard>
+                </div>
 
-            {/* Password */}
-            <div className="mt-4">
-                <Label htmlFor="password">Password</Label>
-
-                <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    className="block mt-1 w-full"
-                    onChange={event => setPassword(event.target.value)}
-                    required
-                    autoComplete="new-password"
-                />
-
-                <InputError messages={errors.password} className="mt-2" />
-            </div>
-
-            {/* Confirm Password */}
-            <div className="mt-4">
-                <Label htmlFor="passwordConfirmation">
-                    Confirm Password
-                </Label>
-
-                <Input
-                    id="passwordConfirmation"
-                    type="password"
-                    value={passwordConfirmation}
-                    className="block mt-1 w-full"
-                    onChange={event =>
-                        setPasswordConfirmation(event.target.value)
-                    }
-                    required
-                />
-
-                <InputError
-                    messages={errors.password_confirmation}
-                    className="mt-2"
-                />
-            </div>
-
-            <div className="flex items-center justify-end mt-4">
-                <Link
-                    href="/login"
-                    className="underline text-sm text-gray-600 hover:text-gray-900">
-                    Already registered?
-                </Link>
-
-                <Button className="ml-4">Register</Button>
-            </div>
-        </form>
+            </RegisterContext.Provider>
+        </div>
     )
 }
 
-export default Page
+export default Register

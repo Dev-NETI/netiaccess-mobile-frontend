@@ -1,0 +1,7 @@
+{
+  "name": "breeze-next",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}

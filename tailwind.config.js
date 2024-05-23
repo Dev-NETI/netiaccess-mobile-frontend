@@ -1,12 +1,15 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
-    content: ['./src/**/*.js'],
-    darkMode: 'media',
+    content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
+    darkMode: 'class',
     theme: {
         extend: {
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                'nykBlue': '#1A468C',
             },
         },
     },

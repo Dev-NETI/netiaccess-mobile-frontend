@@ -3,6 +3,7 @@
 import { useAuth } from '@/hooks/auth'
 import Navigation from '@/app/(app)/Navigation'
 import Loading from '@/app/(app)/Loading'
+import BottomNavigation from '@/components/app/BottomNavigation'
 
 const AppLayout = ({ children, header }) => {
     const { user } = useAuth({ middleware: 'auth' })
@@ -16,6 +17,7 @@ const AppLayout = ({ children, header }) => {
             <Navigation user={user} />
 
             <main>{children}</main>
+            <BottomNavigation />
         </div>
     )
 }

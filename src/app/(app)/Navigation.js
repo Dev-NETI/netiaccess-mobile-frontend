@@ -22,11 +22,11 @@ const Navigation = ({ user }) => {
                 <div className="flex justify-between h-16">
                     <div className="flex">
                         {/* Logo */}
-                        <div className="flex-shrink-0 flex items-center">
+                        {/* <div className="flex-shrink-0 flex items-center">
                             <Link href="/dashboard">
                                 <ApplicationLogo className="block h-10 w-auto fill-current text-gray-600" />
                             </Link>
-                        </div>
+                        </div> */}
 
                         {/* Navigation Links */}
                         <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
