@@ -1,8 +1,8 @@
 import React from 'react'
 
-function Paragraph({styles,value}) {
+function Paragraph({className,value}) {
   return (
-    <p className={styles + " text-lg text-stone-600"} >{value}</p>
+    <p className={`${className} text-lg text-stone-600`} >{value}</p>
   )
 }
 

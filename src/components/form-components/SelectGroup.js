@@ -10,7 +10,7 @@ function SelectGroup({ label, errorMessage, isError = false, children, ...props 
             <Select className=" py-0 mt-3" {...props}>
                 {children}
             </Select>
-            {isError && <Badge className="  bg-red-100 text-red-800 " message={errorMessage} />}
+            {isError && <Badge className="  text-stone-200 text-xl bg-red-700 " message={errorMessage} />}
 
         </>
 

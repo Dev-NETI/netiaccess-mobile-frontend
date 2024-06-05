@@ -9,7 +9,7 @@ function InputGroup({ label, errorMessage, isError = false, ...props }) {
 
             <Label className=" font-medium  text-gray-700 ">{label}</Label>
             <Input type="text" className=" py-0 mt-3" {...props} />
-            {isError && <Badge className="  bg-red-100 text-red-800 " message={errorMessage} />}
+            {isError && <Badge className="  text-stone-200 text-xl bg-red-700 " message={errorMessage} />}
 
         </>
     )

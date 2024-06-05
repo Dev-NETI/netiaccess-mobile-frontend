@@ -8,7 +8,9 @@ import AddressForm from "@/components/auth/register/AddressForm"
 import EmploymentForm from "@/components/auth/register/EmploymentForm"
 import CredentialForm from "@/components/auth/register/CredentialForm"
 import ContactForm from "@/components/auth/register/ContactForm"
+import VerifyContactForm from "@/components/auth/register/VerifyContactForm"
 import { RegisterContext } from "@/stores/RegisterContext"
+
 
 function Register() {
     const [currentState, setCurrentState] = useState(1);
@@ -26,11 +28,14 @@ function Register() {
     const activeForm = (currentState) => {
         switch (currentState) {
             case 1:
-                // return <PersonalInfoForm /> //this is the right form
-                return <ContactForm /> //for testing
+                return <PersonalInfoForm /> //this is the right form
+                // return <ContactForm /> //for testing
+                // return <VerifyContactForm /> //for testing
+                // return <CredentialForm /> //for testing
                 break;
             case 2:
-                return <AddressForm />
+                return <AddressForm />//this is the right form
+                // return <VerifyContactForm /> //for testing
                 break;
             case 3:
                 return <EmploymentForm />
@@ -39,7 +44,7 @@ function Register() {
                 return <ContactForm />
                 break;
             case 5:
-                return <EmploymentForm />
+                return <VerifyContactForm />
                 break;
             default:
                 return <CredentialForm />

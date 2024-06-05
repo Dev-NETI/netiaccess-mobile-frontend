@@ -26,7 +26,7 @@ function Home() {
                 <div className="w-full mt-4">
                     <Link href="/register">
                         <Button
-                            className="bg-stone-100 border-2 border-blue-900 text-blue-900"
+                            className="bg-stone-100 border-2 border-blue-900 text-stone-900"
                         >
                             Create an account
                         </Button>

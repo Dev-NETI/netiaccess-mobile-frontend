@@ -10,8 +10,8 @@ function ToggleSwitch({ activeOption = 1, firstOption, secondOption, handleToggl
                 onClick={() => handleToggle(1)}>
                 {firstOption}
             </div>
-            <div className={`${activeOption === 2 ? selectedClass : unSelectedClass} basis-6/12 rounded-full text-center py-2 my-1 mr-1`}
-                onClick={() => handleToggle(2)}>
+            <div className={`${activeOption === 0 ? selectedClass : unSelectedClass} basis-6/12 rounded-full text-center py-2 my-1 mr-1`}
+                onClick={() => handleToggle(0)}>
                 {secondOption}
             </div>
         </div>

@@ -5,6 +5,7 @@ import { useCourses } from '@/hooks/api/courses'
 import { useEffect, useState } from 'react'
 import CoursesList from '@/components/enrollment/CoursesList'
 import Input from '@/components/Input'
+import { useAuth } from '@/hooks/auth'
 
 const CourseListPage = () => {
     const [loading, setLoading] = useState(false);
@@ -16,33 +17,43 @@ const CourseListPage = () => {
         'upgradingCourses': [],
         'otherCourses': [],
     });
-    const [courses, setCourses] = useState([]);//for searching
-    const [searchedCourse, setSearchedCourse] = useState([]);//state holding the searched
-    const { index } = useCourses();
-
+    const [courses, setCourses] = useState(null);//for searching
+    const { index, show } = useCourses();
+    const { user } = useAuth({ middleware: 'auth' });
+    
     useEffect(() => {
         setLoading(true);
-
-        index()
-            .then(({ data }) => {
-                setCourses(data);
-                //setMandatory
-                filterCourseData('mandatoryCourses', data, 1);
-                //setNMC
-                filterCourseData('nmcCourses', data, 3);
-                //setNMCR
-                filterCourseData('nmcrCourses', data, 4);
-                //setPJMCC
-                filterCourseData('pjmccCourses', data, 7);
-                //setUPGRADING
-                filterCourseData('upgradingCourses', data, 2);
-                //setOTHER
-                filterCourseData('otherCourses', data, 8);
-
-            })
-            .finally(() => setLoading(false))
-
+        showAllCourse(null);
     }, []);
+
+    const showAllCourse = (searchInput = null) => {
+        if (searchInput !== null && searchInput !== '') {
+            show(searchInput)
+                .then(({ data }) => {
+                    setCourses(data)
+                })
+                .finally(() => setLoading(false))
+        } else {
+            index()
+                .then(({ data }) => {
+                    setCourses(null);
+                    //setMandatory
+                    filterCourseData('mandatoryCourses', data, 1);
+                    //setNMC
+                    filterCourseData('nmcCourses', data, 3);
+                    //setNMCR
+                    filterCourseData('nmcrCourses', data, 4);
+                    //setPJMCC
+                    filterCourseData('pjmccCourses', data, 7);
+                    //setUPGRADING
+                    filterCourseData('upgradingCourses', data, 2);
+                    //setOTHER
+                    filterCourseData('otherCourses', data, 8);
+
+                })
+                .finally(() => setLoading(false))
+        }
+    }
 
     const filterCourseData = (identifier, data, courseTypeId) => {
         setFilteredCourses((prevState) => {
@@ -53,13 +64,7 @@ const CourseListPage = () => {
         });
     }
 
-    const onSearch = (value) => {
-        setSearchedCourse(value.length === 0 ? [] : courses.filter(course => course.coursecode.toLowerCase().includes(value.toLowerCase())));
-    }
-    console.log(searchedCourse);
-    // console.log(filteredCourses.otherCourses);
-    
-    const courseList = searchedCourse.length === 0 ?
+    const courseList = courses === null ?
         (
             <>
                 <CoursesList title="Mandatory" data={filteredCourses.mandatoryCourses} />
@@ -71,7 +76,7 @@ const CourseListPage = () => {
             </>
         )
         :
-        <CoursesList title="Result" data={searchedCourse} itemcount={true} />
+        <CoursesList title="Result" data={courses} itemcount={true} />
 
     return (
         <>
@@ -90,14 +95,14 @@ const CourseListPage = () => {
                                     <div className="flex flex-col gap-3">
                                         {/* search courses */}
                                         <div>
-                                            <Input className="rounded-2xl py-2" placeholder="Search..." onChange={(event) => onSearch(event.target.value)} />
+                                            <Input className="rounded-2xl py-2" placeholder="Search..." onChange={(event) => showAllCourse(event.target.value)} />
                                         </div>
 
                                         {courseList}
                                     </div>
                                 )
                         }
-                        
+
                     </div>
                 </div>
             </div>
