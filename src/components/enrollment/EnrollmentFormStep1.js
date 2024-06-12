@@ -11,10 +11,12 @@ import { usePaymentMode } from '@/hooks/api/payment-mode'
 import { useTransportation } from '@/hooks/api/transportation'
 import { useDormitory } from '@/hooks/api/dormitory'
 import { showResource, showResourceW2Param, indexResource } from '@/utils/resource'
+import Loading from '../Loading'
+import { generateUniqueRegistrationNumber } from '@/utils/utils'
 
 function EnrollmentFormStep1() {
     const [isChecked, setIsChecked] = useState(false)
-    const { course, handleNextForm, formatDate, user, formData, setFormData } = useContext(EnrollmentContext)
+    const { course, handleNextForm, formatDate, user, setFormData } = useContext(EnrollmentContext)
     const [formOptions, setFormOptions] = useState({
         schedule: [],
         paymentMode: [],
@@ -26,12 +28,18 @@ function EnrollmentFormStep1() {
     const { fetchDataWith2Params: getPaymentMode } = usePaymentMode()
     const { index: getTransportation } = useTransportation()
     const { show: getDormitory } = useDormitory()
-
+    const [isLoading, setIsLoading] = useState(false)
+    const traineeId = user.traineeid
+    const fleetId = user.fleet_id
+    const traineeName = user.f_name+" "+user.l_name
+    const registrationNumber = generateUniqueRegistrationNumber()
+    
     useEffect(() => {
+        setIsLoading(true)
         showResource(show, course, setFormOptions, "schedule")
         showResourceW2Param(getPaymentMode, course, user.fleet_id, setFormOptions, "paymentMode")
         indexResource(getTransportation, setFormOptions, "transportation")
-        showResource(getDormitory, user.fleet_id, setFormOptions, "dormitory")
+        showResource(getDormitory, user.fleet_id, setFormOptions, "dormitory", setIsLoading(false))
     }, [])
 
     const handleChecked = () => {
@@ -41,25 +49,35 @@ function EnrollmentFormStep1() {
     function handleSubmit(event) {
         event.preventDefault()
 
-        const formData = new FormData(event.target)
-        const data = Object.fromEntries(formData.entries())
+        const fD = new FormData(event.target)
+        const data = Object.fromEntries(fD.entries())
 
         setFormData((prevState) => {
             return {
                 ...prevState,
-                ...data
+                ...data,
+                isChecked,
+                course,
+                traineeId,
+                fleetId,
+                traineeName,
+                registrationNumber
             }
         })
 
         handleNextForm()
     }
 
-    //tp be continued
     function handleScheduleChange(scheduleId) {
-        // const scheduleItem = formOptions.schedule.map(item => console.log(item));
-    }
-    // console.log(formOptions.schedule[1].scheduleid)
+        setFormOptions((prevState) => {
+            return {
+                ...prevState,
+                selectedSchedule: formOptions.schedule.find((item) => item.scheduleid === parseInt(scheduleId))
+            }
+        })
 
+    }
+    
     const roomForm = isChecked && (
         <>
             <div className='basis-full mt-2'>
@@ -74,61 +92,70 @@ function EnrollmentFormStep1() {
 
             <div className='basis-full mt-2 flex flex-row gap-2 justify-between'>
                 <div className='basis-4/12'>
-                    <InputGroup type="date" id="checkInDate" name="checkInDate" label="Check-in Date" errorMessage="Please select check in date!" required={isChecked} />
+                    <InputGroup type="date" id="checkInDate" name="checkInDate" min={formOptions.selectedSchedule.startdateformat}
+                        defaultValue={formOptions.selectedSchedule.startdateformat} label="Check-in Date" errorMessage="Please select check in date!"
+                        required={isChecked} />
                 </div>
                 <div className='basis-4/12'>
-                    <InputGroup type="date" id="checkOutDate" name="checkOutDate" label="Check-in Date" errorMessage="Please select check in date!" required={isChecked} />
+                    <InputGroup type="date" id="checkOutDate" name="checkOutDate" max={formOptions.selectedSchedule.enddateformat}
+                        defaultValue={formOptions.selectedSchedule.enddateformat} label="Check-in Date" errorMessage="Please select check in date!"
+                        required={isChecked} />
                 </div>
             </div>
         </>
     )
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className='basis-full mt-2'>
-                <SelectGroup label="Schedule" id="scheduleId" name="scheduleId" errorMessage="Please select a schedule!"
-                    onChange={(event) => handleScheduleChange(event.target.value)} required>
-                    <option value="">Select</option>
-                    {
-                        formOptions.schedule.map((schedule) => (
-                            <option key={schedule.scheduleid} value={schedule.scheduleid}>{formatDate(schedule.startdateformat)} to {formatDate(schedule.enddateformat)}</option>
-                        ))
-                    }
-                </SelectGroup>
-            </div>
+        isLoading ?
+            <Loading label="Loading" />
+            :
+            (
+                <form onSubmit={handleSubmit}>
+                    <div className='basis-full mt-2'>
+                        <SelectGroup label="Schedule" id="scheduleId" name="scheduleId" errorMessage="Please select a schedule!"
+                            onChange={(event) => handleScheduleChange(event.target.value)} required>
+                            <option value="">Select</option>
+                            {
+                                formOptions.schedule.map((schedule) => (
+                                    <option key={schedule.scheduleid} value={schedule.scheduleid}>{formatDate(schedule.startdateformat)} to {formatDate(schedule.enddateformat)}</option>
+                                ))
+                            }
+                        </SelectGroup>
+                    </div>
 
-            <div className='basis-full mt-2'>
-                <SelectGroup label="Payment Mode" id="paymentModeId" name="paymentModeId" errorMessage="Please select a payment mode!" required>
-                    <option value="">Select</option>
-                    {
-                        formOptions.paymentMode.map((paymentMode) => (
-                            <option key={paymentMode.paymentmodeid} value={paymentMode.paymentmodeid}>{paymentMode.paymentmode}</option>
-                        ))
-                    }
-                </SelectGroup>
-            </div>
+                    <div className='basis-full mt-2'>
+                        <SelectGroup label="Payment Mode" id="paymentModeId" name="paymentModeId" errorMessage="Please select a payment mode!" required>
+                            <option value="">Select</option>
+                            {
+                                formOptions.paymentMode.map((paymentMode) => (
+                                    <option key={paymentMode.paymentmodeid} value={paymentMode.paymentmodeid}>{paymentMode.paymentmode}</option>
+                                ))
+                            }
+                        </SelectGroup>
+                    </div>
 
-            <div className='basis-full mt-2'>
-                <SelectGroup label="Transportation" id="busModeId" name="busModeId" errorMessage="Please select a transportation!" required>
-                    {
-                        formOptions.transportation.map((transportation) => (
-                            <option key={transportation.id} value={transportation.id} >{transportation.busmode}</option>
-                        ))
-                    }
-                </SelectGroup>
-            </div>
+                    <div className='basis-full mt-2'>
+                        <SelectGroup label="Transportation" id="busModeId" name="busModeId" errorMessage="Please select a transportation!" required>
+                            {
+                                formOptions.transportation.map((transportation) => (
+                                    <option key={transportation.id} value={transportation.id} >{transportation.busmode}</option>
+                                ))
+                            }
+                        </SelectGroup>
+                    </div>
 
-            <div className="basis-full mt-2 flex items-center">
-                <Checkbox label="Tick the box if you want to avail a dormitory/room." onChange={handleChecked} checked={isChecked} />
-            </div>
+                    <div className="basis-full mt-2 flex items-center">
+                        <Checkbox label="Tick the box if you want to avail a dormitory/room." onChange={handleChecked} checked={isChecked} />
+                    </div>
 
-            {roomForm}
+                    {roomForm}
 
-            <div className='basis-full mt-2'>
-                <Button className="mt-2 "  >Next</Button>
-            </div>
+                    <div className='basis-full mt-2'>
+                        <Button className="mt-2 "  >Next</Button>
+                    </div>
 
-        </form>
+                </form>
+            )
     )
 }
 

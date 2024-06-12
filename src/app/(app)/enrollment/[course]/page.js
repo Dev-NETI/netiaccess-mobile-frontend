@@ -16,9 +16,9 @@ function EnrollmentForm({ params }) {
     const { user } = useAuth({ middleware: 'auth' })
     const [formData, setFormData] = useState({})
 
-    useEffect(()=>{
-        console.log(formData)
-    },[formData])
+    useEffect(() => {
+        // console.log(formData)
+    }, [formData])
 
     function handleNextForm() {
         setActiveForm(activeForm + 1);

@@ -7,13 +7,26 @@ import { useContext } from 'react'
 import Button from '../Button'
 import Checkbox from '../form-components/Checkbox'
 import Return from './Return'
+import { useEnrollment } from '@/hooks/api/enrollment'
 
 function EnrollmentFormStep2() {
-    const { handleNextForm, handleReturnForm } = useContext(EnrollmentContext)
     const [isChecked, setIsChecked] = useState(false);
-
+    const { handleNextForm, handleReturnForm, formData } = useContext(EnrollmentContext)
+    const { store: storeEnrollment } = useEnrollment()
+    console.log(formData)
     function handleChecked() {
         setIsChecked(!isChecked)
+    }
+
+    function handleNext() {
+
+        storeEnrollment(formData)
+            .then(({ data }) => {
+                if (data) {
+                    handleNextForm()
+                }
+            })
+
     }
 
     const buttonClass = !isChecked && 'bg-slate-500'
@@ -31,7 +44,7 @@ function EnrollmentFormStep2() {
                 <Checkbox label={acknowledgeLabel} onChange={handleChecked} checked={isChecked} />
             </div>
 
-            <Button className={`${buttonClass} mt-2 basis-full `} type="button" onClick={handleNextForm} disabled={!isChecked}>Next</Button>
+            <Button className={`${buttonClass} mt-2 basis-full `} type="button" onClick={handleNext} disabled={!isChecked}>Next</Button>
 
             <Return onClick={handleReturnForm} />
         </>
