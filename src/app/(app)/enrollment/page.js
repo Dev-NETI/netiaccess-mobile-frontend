@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import CoursesList from '@/components/enrollment/CoursesList'
 import Input from '@/components/Input'
 import { useAuth } from '@/hooks/auth'
+import Loading from '@/components/Loading'
 
 const CourseListPage = () => {
     const [loading, setLoading] = useState(false);
@@ -20,21 +21,28 @@ const CourseListPage = () => {
     const [courses, setCourses] = useState(null);//for searching
     const { index, show } = useCourses();
     const { user } = useAuth({ middleware: 'auth' });
-    
+
     useEffect(() => {
-        setLoading(true);
-        showAllCourse(null);
+
+        const fetchData = async () => {
+            setLoading(true);
+            await showAllCourse(null);
+            setLoading(false);
+        }
+
+        fetchData()
+
     }, []);
 
     const showAllCourse = (searchInput = null) => {
         if (searchInput !== null && searchInput !== '') {
-            show(searchInput)
+            return show(searchInput)
                 .then(({ data }) => {
                     setCourses(data)
                 })
                 .finally(() => setLoading(false))
         } else {
-            index()
+            return index()
                 .then(({ data }) => {
                     setCourses(null);
                     //setMandatory
@@ -88,11 +96,13 @@ const CourseListPage = () => {
                         {
                             loading ?
                                 (
-                                    <p>Courses is loading...</p>
+                                    <div className='flex justify-center'>
+                                        <Loading label="Courses data is loading..." />
+                                    </div>
 
                                 ) :
                                 (
-                                    <div className="flex flex-col gap-3">
+                                    <div className="flex flex-col gap-3 mb-20">
                                         {/* search courses */}
                                         <div>
                                             <Input className="rounded-2xl py-2" placeholder="Search..." onChange={(event) => showAllCourse(event.target.value)} />

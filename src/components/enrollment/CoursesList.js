@@ -19,7 +19,7 @@ function CoursesList({ title, data, itemcount = false }) {
     return (
         <>
             <div className='w-full'>
-                <H2 value={title} className="mb-6 text-xl" />
+                <H2 value={title} className="mb-6 text-lg" />
             </div>
 
             <Slider {...settings}>

@@ -7,9 +7,16 @@ import { useResource } from '../resource'
  *
  * @return {*}
  */
-const useCourses = () => {
+const useCourses = (customUrl = null) => {
   const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL
-  const route = '/api/courses'
+  let customRoute;
+
+  if (customUrl === null) {
+    customRoute = '/api/courses'
+  } else {
+    customRoute = '/api/courses/' + customUrl
+  }
+  const route = customRoute
 
   return {
     ...useResource({ baseURL, route }),

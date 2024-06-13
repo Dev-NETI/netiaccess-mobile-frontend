@@ -2,6 +2,7 @@ import React from 'react'
 import H2 from '../H2'
 import { formStep3Title, formStep3Notice, mandatoryRequirements } from '@/data/enrollment'
 import Button from '../Button'
+import Link from 'next/link'
 
 function EnrollmentFormStep4() {
     return (
@@ -15,7 +16,9 @@ function EnrollmentFormStep4() {
                 ))
             }
 
-            <Button className={` mt-2 basis-full `} type="button" >Finish</Button>
+            <Link href="/enrolled-courses">
+                <Button className={` mt-2 basis-full `} type="button" >Finish</Button>
+            </Link>
         </>
     )
 }

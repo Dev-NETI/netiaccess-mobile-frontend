@@ -13,7 +13,7 @@ function EnrollmentFormStep2() {
     const [isChecked, setIsChecked] = useState(false);
     const { handleNextForm, handleReturnForm, formData } = useContext(EnrollmentContext)
     const { store: storeEnrollment } = useEnrollment()
-    console.log(formData)
+    
     function handleChecked() {
         setIsChecked(!isChecked)
     }

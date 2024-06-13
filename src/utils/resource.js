@@ -1,6 +1,6 @@
 function indexResource(hookMethod, setMethod, identifier, finalMethod = null) {
 
-    hookMethod()
+    return hookMethod()
         .then(({ data }) => {
             
             setMethod((prevState) => {
@@ -20,7 +20,7 @@ function indexResource(hookMethod, setMethod, identifier, finalMethod = null) {
 
 function showResource(hookMethod, parameter, setMethod, identifier, finalMethod = null) {
 
-    hookMethod(parameter)
+    return hookMethod(parameter)
         .then(({ data }) => {
             
             setMethod((prevState) => {
@@ -40,7 +40,7 @@ function showResource(hookMethod, parameter, setMethod, identifier, finalMethod 
 
 function showResourceW2Param(hookMethod, parameter, secondParameter, setMethod, identifier, finalMethod = null) {
 
-    hookMethod(parameter, secondParameter)
+    return hookMethod(parameter, secondParameter)
         .then(({ data }) => {
             
             setMethod((prevState) => {
