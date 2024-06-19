@@ -22,7 +22,7 @@ const useResource = ({ baseURL, route }) => {
      */
     const show = (id) => axios.get(`${route}/${id}`)
 
-    const fetchDataWith2Params = (param1,param2) => axios.get(`${route}/${param1}/${param2}`)
+    const fetchDataWith2Params = (param1, param2) => axios.get(`${route}/${param1}/${param2}`)
 
 
     /**
@@ -42,6 +42,8 @@ const useResource = ({ baseURL, route }) => {
      */
     const update = (id, payload) => axios.put(`${route}/${id}`, payload)
 
+    const patch = (payload) => axios.patch(`${route}`, payload)
+
     /**
      * Delete a record from the resource.
      *
@@ -57,6 +59,7 @@ const useResource = ({ baseURL, route }) => {
         store,
         update,
         destroy,
+        patch,
     }
 }
 

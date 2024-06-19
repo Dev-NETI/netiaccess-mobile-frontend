@@ -48,7 +48,7 @@ const Login = () => {
     }
 
     return (
-        <div className="grid grid-cols-1 ">
+        <div className="grid grid-cols-1 mt-5">
             <div className="col-span-1 mx-2 flex flex-col items-center">
                 <div className="w-full text-start ml-2">
                     <H2 value={title} className=""></H2>

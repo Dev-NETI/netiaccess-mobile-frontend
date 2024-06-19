@@ -28,7 +28,12 @@ const generateUniqueRegistrationNumber = () => {
     return uniqueRegistrationNum;
 }
 
+async function handleSetMethod(setMethod,newValue){
+    await setMethod(newValue)
+}
+
 export {
     formatDate,
     generateUniqueRegistrationNumber,
+    handleSetMethod,
 }

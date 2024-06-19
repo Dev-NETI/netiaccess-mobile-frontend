@@ -72,13 +72,13 @@ function EnrollmentFormStep3() {
                 <InvoiceSummary firstValue="Course" secondValue={state.courseInfo.coursecode} />
                 <InvoiceSummary firstValue="Training Date" secondValue={trainingDate} />
                 <InvoiceSummary firstValue="Package" secondValue={`Package ${enrollmentData.enrollmentData.t_fee_package}`} />
-                <InvoiceSummary firstValue="Package Price" secondValue={`₱ ${enrollmentData.enrollmentData.total}`} />
+                <InvoiceSummary firstValue="Package Price" secondValue="₱ 5,000.00" />
                 <Divider />
                 <InvoiceSummary firstValue="Room Type" secondValue={enrollmentData.enrollmentData.dorm?.dorm} />
                 <InvoiceSummary firstValue="Check In Date" secondValue={formatReservationDate(enrollmentData.enrollmentData.checkindate)} />
                 <InvoiceSummary firstValue="Check Out Date" secondValue={formatReservationDate(enrollmentData.enrollmentData.checkoutdate)} />
                 <InvoiceSummary firstValue="Transportation" secondValue="Roundtrip" />
-                <InvoiceSummary firstValue="Dormitory & Meal Fee" secondValue={`₱ ${totalDormAndMeal}`} />
+                <InvoiceSummary firstValue="Dormitory & Meal Fee" secondValue="0" />
 
                 <Button className={` mt-2 basis-full `} type="button" onClick={handleNextForm} >Next</Button>
 
