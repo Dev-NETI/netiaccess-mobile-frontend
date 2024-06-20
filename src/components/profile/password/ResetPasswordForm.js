@@ -2,10 +2,14 @@ import React, { useState } from 'react'
 import InputGroupV2 from '@/components/form-components/InputGroupV2'
 import Button from '@/components/Button'
 import { useTrainee } from '@/hooks/api/trainee'
+import Back from '@/components/Back'
+import { updateResource } from '@/utils/resource'
+import { useAuth } from '@/hooks/auth'
 
 function ResetPasswordForm({ traineeId, handleResponse }) {
     const [error, setError] = useState(false);
-    const { patch } = useTrainee('updatePassword')
+    const { user } = useAuth({ middleware: 'auth' })
+    const { patch: updatePassword } = useTrainee('updatePassword')
     const inputBorder = "border-gray-400"
 
     function handleSubmit(event) {
@@ -20,11 +24,8 @@ function ResetPasswordForm({ traineeId, handleResponse }) {
             setError(true)
         } else {
             setError(false)
-            // console.log(data)
-            patch(data)
-                .then(({ data }) => {
-                    handleResponse(data)
-                })
+            const updateResponse = updateResource(user.traineeid, data, updatePassword)
+            handleResponse(updateResponse)
         }
 
     }
@@ -41,6 +42,9 @@ function ResetPasswordForm({ traineeId, handleResponse }) {
             </div>
             <div className='basis-full px-5'>
                 <Button >Reset Password</Button>
+            </div>
+            <div className='basis-full px-5 flex justify-center'>
+                <Back route="/profile" />
             </div>
         </form>
     )

@@ -42,7 +42,7 @@ const useResource = ({ baseURL, route }) => {
      */
     const update = (id, payload) => axios.put(`${route}/${id}`, payload)
 
-    const patch = (payload) => axios.patch(`${route}`, payload)
+    const patch = (id, payload) => axios.patch(`${route}/${id}`, payload)
 
     /**
      * Delete a record from the resource.
@@ -59,7 +59,7 @@ const useResource = ({ baseURL, route }) => {
         store,
         update,
         destroy,
-        patch,
+        patch
     }
 }
 

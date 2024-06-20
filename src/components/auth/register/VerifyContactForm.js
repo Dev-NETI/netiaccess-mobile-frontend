@@ -7,7 +7,7 @@ import Paragraph from '@/components/Paragraph'
 import Button from '@/components/Button'
 import Badge from '@/components/Badge'
 
-function VerifyContactForm() {
+function VerifyContactForm({ buttonLabel = "Create Account" }) {
     const { setTraineeData, handleNextProcess } = useContext(RegisterContext)
     const [error, setError] = useState(false);
     const [verificateCode, setVerificationCode] = useState();
@@ -63,7 +63,7 @@ function VerifyContactForm() {
             setTraineeData((prevState) => ({ ...prevState }));
             handleNextProcess();
         }
-        
+
     }
 
     return (
@@ -90,7 +90,7 @@ function VerifyContactForm() {
                 {error && <Badge className="basis-full  text-stone-200 text-xl bg-red-700" message="Verification code invalid!" />}
             </div>
             <div className='w-full'>
-                <Button className="mt-2 w-4/12 align" >Create Account</Button>
+                <Button className="mt-2 w-4/12 align" >{buttonLabel}</Button>
             </div>
         </form>
     )

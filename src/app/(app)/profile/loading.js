@@ -1,6 +1,6 @@
 import React from 'react'
 
-function loading() {
+function Loading() {
   return (
     <div>
       Loading...Happy
@@ -8,4 +8,4 @@ function loading() {
   )
 }
 
-export default loading
+export default Loading

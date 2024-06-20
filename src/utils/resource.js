@@ -2,7 +2,7 @@ function indexResource(hookMethod, setMethod, identifier, finalMethod = null) {
 
     return hookMethod()
         .then(({ data }) => {
-            
+
             setMethod((prevState) => {
                 return {
                     ...prevState,
@@ -22,7 +22,7 @@ function showResource(hookMethod, parameter, setMethod, identifier, finalMethod 
 
     return hookMethod(parameter)
         .then(({ data }) => {
-            
+
             setMethod((prevState) => {
                 return {
                     ...prevState,
@@ -42,7 +42,7 @@ function showResourceW2Param(hookMethod, parameter, secondParameter, setMethod, 
 
     return hookMethod(parameter, secondParameter)
         .then(({ data }) => {
-            
+
             setMethod((prevState) => {
                 return {
                     ...prevState,
@@ -58,8 +58,14 @@ function showResourceW2Param(hookMethod, parameter, secondParameter, setMethod, 
         })
 }
 
+async function updateResource(id, payload, resourceHookMethod) {
+    const { data } = await resourceHookMethod(id, payload)
+    return data
+}
+
 export {
     showResource,
     showResourceW2Param,
-    indexResource
+    indexResource,
+    updateResource,
 }

@@ -5,8 +5,8 @@ import { TraineeContext } from '@/stores/TraineeContext'
 import { useContext } from 'react'
 
 function ProfileImage() {
-    const { traineeData } = useContext(TraineeContext)
-    const traineeName = traineeData.f_name + " " + traineeData.m_name + " " + traineeData.l_name + " " + traineeData.suffix
+    const { user } = useContext(TraineeContext)
+    const traineeName = user.f_name + " " + user.m_name + " " + user.l_name + " " + user.suffix
 
     return (
         <>
@@ -22,11 +22,6 @@ function ProfileImage() {
             <div className='basis-full flex flex-col justify-center'>
                 <p className='font-bold font-sans text-lg mx-auto'>
                     {traineeName}
-                </p>
-            </div>
-            <div className='basis-full flex flex-col justify-center'>
-                <p className='font-sans text-lg text-stone-400 mx-auto'>
-                    {traineeData.rank?.rank}
                 </p>
             </div>
         </>
