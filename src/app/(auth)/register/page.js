@@ -29,7 +29,7 @@ function Register() {
         switch (currentState) {
             case 1:
                 return <PersonalInfoForm /> //this is the right form
-                // return <ContactForm /> //for testing
+                // return <CredentialForm /> //for testing
                 // return <VerifyContactForm /> //for testing
                 // return <CredentialForm /> //for testing
                 break;
@@ -59,7 +59,7 @@ function Register() {
                 <div className="col-span-1">
                     <ProcessCard>
                         {/* process indication */}
-                        <div className="flex flex-row gap-3">
+                        <div className="flex flex-row gap-1">
                             <ProcessCardProcessIndicator isActive={currentState === 1} processDescription="Personal" processNumber="1" />
                             <ProcessCardProcessIndicator isActive={currentState === 2} processDescription="Address" processNumber="2" />
                             <ProcessCardProcessIndicator isActive={currentState === 3} processDescription="Employment" processNumber="3" />

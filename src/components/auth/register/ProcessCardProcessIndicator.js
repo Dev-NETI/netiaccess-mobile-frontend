@@ -1,7 +1,7 @@
 import React from 'react'
 import Label from '@/components/Label'
 
-function ProcessCardProcessIndicator({processDescription,processNumber,isActive = false}) {
+function ProcessCardProcessIndicator({ processDescription, processNumber, isActive = false }) {
     const labelClass = isActive ? ' text-blue-700 font-extrabold ' : ' font-medium  text-gray-700 ';
     const badgeClass = isActive ? ' border-blue-700 text-stone-200 bg-blue-700 font-extrabold ' : ' border-neutral-500 text-neutral-500 ';
 

@@ -3,6 +3,7 @@ import InputGroup from '@/components/form-components/InputGroup';
 import { useContext } from 'react';
 import { RegisterContext } from '@/stores/RegisterContext';
 import Button from '@/components/Button';
+import SubmitButton from '@/components/form-components/SubmitButton';
 import { useTrainee } from "@/hooks/api/trainee";
 import Toast from '@/components/Toast';
 import Link from 'next/link';
@@ -15,14 +16,16 @@ function CredentialForm() {
         confirmPasswordError: false,
     });
     const [httpResponse, setHttpResponse] = useState(null);
-    const { store: storeTrainee } = useTrainee('store');
+    const { store: storeTrainee } = useTrainee();
 
     function handleChange(value, setMethod) {
         setMethod(value);
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
+
+        await new Promise((resolve) => setTimeout(resolve, 2000));
 
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
@@ -41,12 +44,8 @@ function CredentialForm() {
                 };
             });
 
-            // will uncomment this after finishing API
-            storeTrainee(traineeData)
-                .then(({ data }) => {
-                    setHttpResponse(data);
-                })
-                .finally();
+            const response = storeTrainee(traineeData)
+            setHttpResponse(response);
         }
     }
 
@@ -70,7 +69,7 @@ function CredentialForm() {
                                     placeholder="Re-enter Password" errorMessage="Passwords do not match!" required />
                             </div>
                             <div className='w-full'>
-                                <Button className="mt-2 w-4/12 align" >Create Account</Button>
+                                <SubmitButton className="mt-2 w-4/12 align" >Create Account</SubmitButton>
                             </div>
                         </form>
                     )

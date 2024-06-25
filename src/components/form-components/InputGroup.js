@@ -3,12 +3,12 @@ import Label from '../Label'
 import Input from '../Input'
 import Badge from '../Badge'
 
-function InputGroup({ label, errorMessage, isError = false, ...props }) {
+function InputGroup({ label, errorMessage, isError = false, type = "text", ...props }) {
     return (
         <>
 
             <Label className=" font-medium  text-gray-700 ">{label}</Label>
-            <Input type="text" className=" py-0 mt-3" {...props} />
+            <Input type={type} className=" py-0 mt-3" {...props} />
             {isError && <Badge className="  text-stone-200 text-xl bg-red-700 " message={errorMessage} />}
 
         </>
