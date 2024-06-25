@@ -10,12 +10,11 @@ import { useGender } from '@/hooks/api/gender';
 import SelectOption from '@/components/form-components/SelectOption';
 import { indexResource, showResource } from '@/utils/resource';
 import ValidationError from '@/components/form-components/ValidationError';
-import * as Yup from 'yup'
 import Loading from '@/components/Loading';
 
 function PersonalInfoForm({ initialData = {}, mode = "store" }) {
 
-    const { setTraineeData, handleNextProcess } = useContext(RegisterContext);
+    const { setTraineeData, handleNextProcess, Yup } = useContext(RegisterContext);
     const [dropdownData, setDropdownData] = useState({
         nationalityData: null,
         genderData: null,
@@ -135,8 +134,10 @@ function PersonalInfoForm({ initialData = {}, mode = "store" }) {
 
                 <div className='w-full'>
                     <Button className="mt-2 w-4/12 align" >Next</Button>
-                </div></>
+                </div>
+            </>
         )
+
     return (
         <form onSubmit={handleSubmit}>
             {ui}

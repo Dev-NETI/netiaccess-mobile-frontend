@@ -10,7 +10,7 @@ import CredentialForm from "@/components/auth/register/CredentialForm"
 import ContactForm from "@/components/auth/register/ContactForm"
 import VerifyContactForm from "@/components/auth/register/VerifyContactForm"
 import { RegisterContext } from "@/stores/RegisterContext"
-
+import * as Yup from 'yup'
 
 function Register() {
     const [currentState, setCurrentState] = useState(1);
@@ -28,14 +28,11 @@ function Register() {
     const activeForm = (currentState) => {
         switch (currentState) {
             case 1:
-                return <PersonalInfoForm /> //this is the right form
-                // return <CredentialForm /> //for testing
-                // return <VerifyContactForm /> //for testing
-                // return <CredentialForm /> //for testing
+                // return <PersonalInfoForm /> //this is the right form
+                return <EmploymentForm />
                 break;
             case 2:
                 return <AddressForm />//this is the right form
-                // return <VerifyContactForm /> //for testing
                 break;
             case 3:
                 return <EmploymentForm />
@@ -54,7 +51,7 @@ function Register() {
 
     return (
         <div className="grid grid-cols-1">
-            <RegisterContext.Provider value={{ traineeData, setTraineeData, handleNextProcess }}>
+            <RegisterContext.Provider value={{ traineeData, setTraineeData, handleNextProcess, Yup }}>
 
                 <div className="col-span-1">
                     <ProcessCard>
