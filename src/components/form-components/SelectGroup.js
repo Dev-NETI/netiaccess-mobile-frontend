@@ -4,13 +4,14 @@ import Badge from '../Badge'
 import Select from '../Select'
 
 function SelectGroup({ label, errorMessage, isError = false, children, ...props }) {
+    let style = isError && ' border-2 border-red-400 '
     return (
         <>
             <Label className=" font-medium  text-gray-700 ">{label}</Label>
-            <Select className=" py-0 mt-3" {...props}>
+            <Select className={`${style} py-0 mt-3`} {...props}>
                 {children}
             </Select>
-            {isError && <Badge className="  text-stone-200 text-xl bg-red-700 " message={errorMessage} />}
+            {isError && <Badge className="  text-red-500 text-xl bg-red-200 " message={errorMessage} />}
 
         </>
 

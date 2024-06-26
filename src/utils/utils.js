@@ -28,12 +28,21 @@ const generateUniqueRegistrationNumber = () => {
     return uniqueRegistrationNum;
 }
 
-async function handleSetMethod(setMethod,newValue){
+async function handleSetMethod(setMethod, newValue) {
     await setMethod(newValue)
 }
+
+const generateRandomNumbers = () => {
+    let randomNumbersString = '';
+    for (let i = 0; i < 6; i++) {
+        randomNumbersString += Math.floor(Math.random() * 10); // Generates a random digit between 0 and 9
+    }
+    return randomNumbersString;
+};
 
 export {
     formatDate,
     generateUniqueRegistrationNumber,
     handleSetMethod,
+    generateRandomNumbers,
 }

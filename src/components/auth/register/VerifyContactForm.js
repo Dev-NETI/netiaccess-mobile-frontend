@@ -6,6 +6,7 @@ import H2 from '@/components/H2'
 import Paragraph from '@/components/Paragraph'
 import Button from '@/components/Button'
 import Badge from '@/components/Badge'
+import { generateRandomNumbers } from '@/utils/utils'
 
 function VerifyContactForm({ buttonLabel = "Create Account" }) {
     const { setTraineeData, handleNextProcess } = useContext(RegisterContext)
@@ -39,14 +40,6 @@ function VerifyContactForm({ buttonLabel = "Create Account" }) {
                 prevInput.focus();
             }
         }
-    };
-
-    const generateRandomNumbers = () => {
-        let randomNumbersString = '';
-        for (let i = 0; i < 6; i++) {
-            randomNumbersString += Math.floor(Math.random() * 10); // Generates a random digit between 0 and 9
-        }
-        return randomNumbersString;
     };
 
     const handleSubmit = (event) => {

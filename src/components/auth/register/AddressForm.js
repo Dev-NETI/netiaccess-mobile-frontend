@@ -12,7 +12,6 @@ import SelectOption from '@/components/form-components/SelectOption';
 import Button from '@/components/Button';
 import { indexResource, showResource } from '@/utils/resource';
 import Loading from '@/components/Loading';
-import ValidationError from '@/components/form-components/ValidationError';
 
 function AddressForm() {
     const [selectedSwitch, setSelectedSwitch] = useState(1);
@@ -23,7 +22,7 @@ function AddressForm() {
         brgyData: null,
     })
     const [loading, setLoading] = useState(true)
-    const [errors, setErrors] = useState(null)
+    const [validationError, setValidationError] = useState(null)
     const { setTraineeData, handleNextProcess, Yup } = useContext(RegisterContext);
     const { index: getRegion } = useRegion();
     const { show: showProvince } = useProvince();
@@ -80,10 +79,11 @@ function AddressForm() {
 
             handleNextProcess();
         } catch (error) {
-            if (error instanceof Yup.ValidationError) {
-                const errors = error.inner.map(err => ({ path: err.path, message: err.message }))
-                setErrors(errors)
-            }
+            const errors = error.inner.reduce((acc, curr) => {
+                acc[curr.path] = curr.message;
+                return acc;
+            }, {});
+            setValidationError(errors);
         }
 
     }
@@ -93,37 +93,37 @@ function AddressForm() {
             return (
                 <>
                     <div className="w-full">
-                        <SelectGroup id="region" name="region" label="Region" errorMessage="This is a test error message!"
+                        <SelectGroup id="region" name="region" label="Region" errorMessage={validationError && validationError.region} isError={validationError && validationError.region}
                             onChange={(event) => showResource(showProvince, event.target.value, setDropdownData, 'provinceData')}  >
                             <SelectOption id="" label="Select" />
                             {dropdownData.regionData?.map((data) => <SelectOption key={data.regCode} id={data.regCode} label={data.regDesc} />)}
                         </SelectGroup>
                     </div>
                     <div className="w-full">
-                        <SelectGroup id="province" name="province" label="Province" errorMessage="This is a test error message!"
+                        <SelectGroup id="province" name="province" label="Province" errorMessage={validationError && validationError.province} isError={validationError && validationError.province}
                             onChange={(event) => showResource(showCity, event.target.value, setDropdownData, 'cityData')}  >
                             <SelectOption id="" label="Select" />
                             {dropdownData.provinceData && dropdownData.provinceData?.map((data) => <SelectOption key={data.provCode} id={data.provCode} label={data.provDesc} />)}
                         </SelectGroup>
                     </div>
                     <div className="w-full">
-                        <SelectGroup id="city" name="city" label="City" errorMessage="This is a test error message!"
+                        <SelectGroup id="city" name="city" label="City" errorMessage={validationError && validationError.city} isError={validationError && validationError.city}
                             onChange={(event) => showResource(showBrgy, event.target.value, setDropdownData, 'brgyData')}  >
                             <SelectOption id="" label="Select" />
                             {dropdownData.cityData && dropdownData.cityData?.map((data) => <SelectOption key={data.citymunCode} id={data.citymunCode} label={data.citymunDesc} />)}
                         </SelectGroup>
                     </div>
                     <div className="w-full">
-                        <SelectGroup id="brgy" name="brgy" label="Brgy" errorMessage="This is a test error message!"  >
+                        <SelectGroup id="brgy" name="brgy" label="Brgy" errorMessage={validationError && validationError.brgy} isError={validationError && validationError.brgy}  >
                             <SelectOption id="" label="Select" />
                             {dropdownData.brgyData && dropdownData.brgyData?.map((data) => <SelectOption key={data.brgyCode} id={data.brgyCode} label={data.brgyDesc} />)}
                         </SelectGroup>
                     </div>
                     <div className="w-full">
-                        <InputGroup id="street" name="street" label="Street" placeholder="Enter Street" errorMessage="This is a test error message!" />
+                        <InputGroup id="street" name="street" label="Street" placeholder="Enter Street" errorMessage={validationError && validationError.street} isError={validationError && validationError.street} />
                     </div>
                     <div className="w-full">
-                        <InputGroup id="postalCode" name="postalCode" label="Postal Code" placeholder="Enter Postal Code" errorMessage="This is a test error message!" />
+                        <InputGroup id="postalCode" name="postalCode" label="Postal Code" placeholder="Enter Postal Code" errorMessage={validationError && validationError.postalCode} isError={validationError && validationError.postalCode} />
                     </div>
                 </>
             )
@@ -131,12 +131,11 @@ function AddressForm() {
             return (
                 <div className="w-full">
                     <InputGroup id="fullAddress" name="fullAddress" label="Full Address" placeholder="Enter Full Address"
-                        errorMessage="This is a test error message!" />
+                        errorMessage={validationError && validationError.fullAddress} isError={validationError && validationError.fullAddress} />
                 </div>
             )
         }
     }
-
 
     return (
         <>
@@ -151,11 +150,7 @@ function AddressForm() {
                             <ToggleSwitch activeOption={selectedSwitch} handleToggle={handleToggle}
                                 firstOption="Local" secondOption="Foreign" />
                         </div>
-                        {errors && (
-                            <div className='w-full'>
-                                <ValidationError title="Warning!" errors={errors} />
-                            </div>
-                        )}
+
                         <form onSubmit={handleSubmit}>
                             {activeForm(selectedSwitch)}
                             <div className='w-full'>

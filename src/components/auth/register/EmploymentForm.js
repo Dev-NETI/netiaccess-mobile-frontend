@@ -8,7 +8,6 @@ import { RegisterContext } from '@/stores/RegisterContext';
 import Button from '@/components/Button';
 import { indexResource } from '@/utils/resource';
 import Loading from '@/components/Loading';
-import ValidationError from '@/components/form-components/ValidationError';
 
 function EmploymentForm() {
     const { index: getRank } = useRank();
@@ -18,7 +17,7 @@ function EmploymentForm() {
         companyData: null,
     })
     const [loading, setLoading] = useState(true)
-    const [errors, setErrors] = useState(null)
+    const [validationError, setValidationError] = useState(null)
     const { setTraineeData, handleNextProcess, Yup } = useContext(RegisterContext);
     const rules = Yup.object().shape({
         rank: Yup.string().required('Rank is required!'),
@@ -51,14 +50,14 @@ function EmploymentForm() {
             })
             handleNextProcess();
         } catch (error) {
-            if (error instanceof Yup.ValidationError) {
-                const errors = error.inner.map(err => ({ path: err.path, message: err.message }))
-                setErrors(errors)
-            }
+            const errors = error.inner.reduce((acc, curr) => {
+                acc[curr.path] = curr.message;
+                return acc;
+            }, {});
+            setValidationError(errors);
         }
 
     }
-
 
     let ui = loading ?
         <div className="w-full">
@@ -66,20 +65,14 @@ function EmploymentForm() {
         </div>
         :
         <form onSubmit={handleSubmit}>
-            {
-                errors &&
-                <div className="w-full">
-                    <ValidationError title="Warning!" errors={errors} />
-                </div>
-            }
             <div className="w-full">
-                <SelectGroup id="rank" name="rank" label="Rank" errorMessage="This is a test error message!"  >
+                <SelectGroup id="rank" name="rank" label="Rank" errorMessage={validationError && validationError.rank} isError={validationError && validationError.rank}  >
                     <SelectOption id="" label="Select" />
                     {dropdownData.rankData && dropdownData.rankData?.map((data) => <SelectOption key={data.rankid} id={data.rankid} label={data.rankacronym} />)}
                 </SelectGroup>
             </div>
             <div className="w-full">
-                <SelectGroup id="company" name="company" label="Company" errorMessage="This is a test error message!"  >
+                <SelectGroup id="company" name="company" label="Company" errorMessage={validationError && validationError.company} isError={validationError && validationError.company}  >
                     <SelectOption id="" label="Select" />
                     {dropdownData.companyData && dropdownData.companyData?.map((data) => <SelectOption key={data.companyid} id={data.companyid} label={data.company} />)}
                 </SelectGroup>

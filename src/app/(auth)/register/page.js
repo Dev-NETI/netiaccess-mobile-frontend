@@ -28,8 +28,7 @@ function Register() {
     const activeForm = (currentState) => {
         switch (currentState) {
             case 1:
-                // return <PersonalInfoForm /> //this is the right form
-                return <EmploymentForm />
+                return <PersonalInfoForm /> //this is the right form
                 break;
             case 2:
                 return <AddressForm />//this is the right form
