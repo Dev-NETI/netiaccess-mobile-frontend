@@ -49,33 +49,26 @@ function Register() {
     }
 
     return (
-        <div className="grid grid-cols-1">
-            <RegisterContext.Provider value={{ traineeData, setTraineeData, handleNextProcess, Yup }}>
+        <RegisterContext.Provider value={{ traineeData, setTraineeData, handleNextProcess, Yup }}>
+            <div className="flex flex-col  py-10">
 
-                <div className="col-span-1">
-                    <ProcessCard>
-                        {/* process indication */}
-                        <div className="flex flex-row gap-1">
-                            <ProcessCardProcessIndicator isActive={currentState === 1} processDescription="Personal" processNumber="1" />
-                            <ProcessCardProcessIndicator isActive={currentState === 2} processDescription="Address" processNumber="2" />
-                            <ProcessCardProcessIndicator isActive={currentState === 3} processDescription="Employment" processNumber="3" />
-                            <ProcessCardProcessIndicator isActive={currentState === 4} processDescription="Contact" processNumber="4" />
-                            <ProcessCardProcessIndicator isActive={currentState === 5} processDescription="Verify Contact" processNumber="5" />
-                            <ProcessCardProcessIndicator isActive={currentState === 6} processDescription="Password" processNumber="6" />
-                        </div>
-
-                        {/* form */}
-                        <div className="flex flex-col gap-2 mt-5">
-
-                            {activeForm(currentState)}
-
-                        </div>
-
-                    </ProcessCard>
+                {/* process indication */}
+                <div className="basis-3/12 flex flex-row gap-1 px-2">
+                    <ProcessCardProcessIndicator isActive={currentState === 1} processDescription="Personal" processNumber="1" />
+                    <ProcessCardProcessIndicator isActive={currentState === 2} processDescription="Address" processNumber="2" />
+                    <ProcessCardProcessIndicator isActive={currentState === 3} processDescription="Employment" processNumber="3" />
+                    <ProcessCardProcessIndicator isActive={currentState === 4} processDescription="Contact" processNumber="4" />
+                    <ProcessCardProcessIndicator isActive={currentState === 5} processDescription="Verify Contact" processNumber="5" />
+                    <ProcessCardProcessIndicator isActive={currentState === 6} processDescription="Password" processNumber="6" />
                 </div>
 
-            </RegisterContext.Provider>
-        </div>
+                {/* form */}
+                <div className="flex flex-col gap-2 mt-5 px-10">
+                    {activeForm(currentState)}
+                </div>
+
+            </div>
+        </RegisterContext.Provider>
     )
 }
 

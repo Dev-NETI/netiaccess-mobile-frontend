@@ -5,33 +5,28 @@ import Link from 'next/link'
 
 function Home() {
     return (
-        <div className="grid grid-cols-1 ">
-            <div className="col-span-1 mx-2 flex flex-col items-center">
-                <div className="w-full text-center">
-                    <H2 value="NETI-OEX"></H2>
-                </div>
-                <div className="w-full mt-2 text-center">
-                    {/* <H2 value="Online Enrollment X"></H2> */}
-                </div>
-                <div className="w-full mt-24">
-                    <Link href="/login">
-                        <Button
-                            type="button"
-                            className=""
-                        >
-                            Log In
-                        </Button>
-                    </Link>
-                </div>
-                <div className="w-full mt-4">
-                    <Link href="/register">
-                        <Button
-                            className="bg-stone-200 border-2 border-blue-900 text-stone-900 "
-                        >
-                            Create an account
-                        </Button>
-                    </Link>
-                </div>
+        <div className='flex flex-col justify-center gap-4'>
+            <div className='basis-full flex justify-center mt-20'>
+                <H2 value="NETI-OEX" className=" text-4xl font-sans " />
+            </div>
+            <div className='basis-full px-10 mt-64'>
+                <Link href="/login">
+                    <Button
+                        type="button"
+                        className=" text-lg shadow-2xl  "
+                    >
+                        Log In
+                    </Button>
+                </Link>
+            </div>
+            <div className='basis-full px-10'>
+                <Link href="/register">
+                    <Button
+                        className=" text-lg bg-stone-100 border-2 border-blue-900 text-stone-900 shadow-2xl "
+                    >
+                        Create an account
+                    </Button>
+                </Link>
             </div>
         </div>
     )

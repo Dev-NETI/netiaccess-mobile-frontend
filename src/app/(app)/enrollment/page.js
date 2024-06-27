@@ -5,11 +5,14 @@ import { useCourses } from '@/hooks/api/courses'
 import { useEffect, useState } from 'react'
 import CoursesList from '@/components/enrollment/CoursesList'
 import Input from '@/components/Input'
-import { useAuth } from '@/hooks/auth'
 import Loading from '@/components/Loading'
+import { getNmcCourses, getMandatoryCourses, getNmcrCourses, getPjmccCourses, getUpgradingCourses, getOtherCourses } from '@/utils/enrollment'
+import { useAuth } from '@/hooks/auth'
+import { useUser } from '@/hooks/api/user'
+import { showResourceSingleState } from '@/utils/resource'
 
 const CourseListPage = () => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [filteredCourses, setFilteredCourses] = useState({
         'mandatoryCourses': [],
         'nmcCourses': [],
@@ -17,59 +20,45 @@ const CourseListPage = () => {
         'pjmccCourses': [],
         'upgradingCourses': [],
         'otherCourses': [],
+        'searchedCourses': [],
     });
-    const [courses, setCourses] = useState(null);//for searching
+    const [courses, setCourses] = useState([]);//for searching
     const { index, show } = useCourses();
-    const { user } = useAuth({ middleware: 'auth' });
+    const { user } = useAuth({ middleware: 'auth' })
+    const { show: showUserInfo } = useUser('rank')
+    const [userInfo, setUserInfo] = useState();
 
     useEffect(() => {
-
-        const fetchData = async () => {
-            setLoading(true);
-            await showAllCourse(null);
-            setLoading(false);
+        const fetchUserInfo = async () => {
+            await showResourceSingleState(user.rank_id, showUserInfo, setUserInfo);
         }
-
-        fetchData()
-
+        fetchUserInfo();
     }, []);
 
-    const showAllCourse = (searchInput = null) => {
-        if (searchInput !== null && searchInput !== '') {
-            return show(searchInput)
-                .then(({ data }) => {
-                    setCourses(data)
-                })
-                .finally(() => setLoading(false))
-        } else {
-            return index()
-                .then(({ data }) => {
-                    setCourses(null);
-                    //setMandatory
-                    filterCourseData('mandatoryCourses', data, 1);
-                    //setNMC
-                    filterCourseData('nmcCourses', data, 3);
-                    //setNMCR
-                    filterCourseData('nmcrCourses', data, 4);
-                    //setPJMCC
-                    filterCourseData('pjmccCourses', data, 7);
-                    //setUPGRADING
-                    filterCourseData('upgradingCourses', data, 2);
-                    //setOTHER
-                    filterCourseData('otherCourses', data, 8);
-
-                })
-                .finally(() => setLoading(false))
-        }
-    }
-
-    const filterCourseData = (identifier, data, courseTypeId) => {
-        setFilteredCourses((prevState) => {
-            return {
-                ...prevState,
-                [identifier]: data.filter(course => course.coursetypeid === courseTypeId)
+    useEffect(() => {
+        if (userInfo) {
+            const fetchCourses = async () => {
+                await showAllCourse();
+                setLoading(false)
             }
-        });
+            fetchCourses();
+        }
+    }, [userInfo]);
+
+    const showAllCourse = async (searchInput = null) => {
+        if (searchInput !== null && searchInput !== '') {
+            const { data } = await show(searchInput)
+            setCourses(data)
+        } else {
+            const { data } = await index()
+            setCourses(null);
+            getMandatoryCourses(setFilteredCourses, 'mandatoryCourses', data, 1, userInfo?.ranklevelid)//setMandatory
+            getNmcCourses(setFilteredCourses, 'nmcCourses', data, 3, userInfo?.ranklevelid, userInfo?.rankdepartmentid)//setNMC
+            getNmcrCourses(setFilteredCourses, 'nmcrCourses', data, 4, userInfo?.ranklevelid, userInfo?.rankdepartmentid)//setNMCR
+            getPjmccCourses(setFilteredCourses, 'pjmccCourses', data, 7, userInfo?.ranklevelid, userInfo?.rankdepartmentid)//setPJMCC
+            getUpgradingCourses(setFilteredCourses, 'upgradingCourses', data, 2, userInfo?.ranklevelid, userInfo?.rankdepartmentid)//setUPGRADING
+            getOtherCourses(setFilteredCourses, 'otherCourses', data, 8, userInfo?.ranklevelid, userInfo?.rankdepartmentid)//setOTHER
+        }
     }
 
     const courseList = courses === null ?
@@ -86,38 +75,27 @@ const CourseListPage = () => {
         :
         <CoursesList title="Result" data={courses} itemcount={true} />
 
-    return (
-        <>
-            <Header title="Enrollment" />
-            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div className="p-6 bg-white border-b border-gray-200">
-
-                        {
-                            loading ?
-                                (
-                                    <div className='flex justify-center'>
-                                        <Loading label="Courses data is loading..." />
-                                    </div>
-
-                                ) :
-                                (
-                                    <div className="flex flex-col gap-3 mb-20">
-                                        {/* search courses */}
-                                        <div>
-                                            <Input className="rounded-2xl py-2" placeholder="Search..." onChange={(event) => showAllCourse(event.target.value)} />
-                                        </div>
-
-                                        {courseList}
-                                    </div>
-                                )
-                        }
-
+    const ui = loading
+        ? <div className='flex h-screen bg-white items-center justify-center rounded-t-3xl'>
+            <Loading label="Courses data is loading..." />
+        </div>
+        : <>
+            <div className='basis-full bg-white rounded-t-3xl py-2'>
+                <Header title="Enrollment" className="ml-6 mt-6" />
+            </div>
+            <div className='basis-full bg-white px-5 py-3'>
+                <div className="flex flex-col gap-3 mb-20">
+                    {/* search courses */}
+                    <div>
+                        <Input placeholder="Search..." onChange={(event) => showAllCourse(event.target.value)} />
                     </div>
+
+                    {courseList}
                 </div>
             </div>
         </>
-    )
+
+    return ui
 }
 
 export default CourseListPage

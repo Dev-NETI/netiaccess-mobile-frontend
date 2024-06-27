@@ -1,12 +1,9 @@
-const Header = ({ title }) => {
+const Header = ({ title, className }) => {
     return (
-        <header className="bg-white shadow">
-            <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-
-                <h2 className="font-semibold text-xl text-gray-800 leading-tight text-center">
-                    {title}
-                </h2>
-            </div>
+        <header>
+            <h2 className={`${className} font-bold text-2xl  leading-tight text-start`}>
+                {title}
+            </h2>
         </header>
     )
 }

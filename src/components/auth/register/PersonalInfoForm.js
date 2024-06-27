@@ -96,7 +96,7 @@ function PersonalInfoForm({ initialData = {}, mode = "store" }) {
     let ui = loading
         ?
         (
-            <div className="w-full">
+            <div className="w-full flex justify-center">
                 <Loading label="Loading..." />
             </div>
         )

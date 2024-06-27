@@ -1,15 +1,20 @@
+import Badge from "./Badge";
 const Card = ({ title, description, children }) => (
-    <div className="block max-w-sm h-24 max-h-24 p-6 bg-gradient-to-r from-cyan-400 to-cyan-700 border border-cyan-400 rounded-lg shadow 
+    <div className="flex flex-col gap-2 p-4 h-20  bg-white border border-slate-200 rounded-2xl shadow-xl 
         hover:bg-gradient-to-r hover:from-cyan-700 hover:to-cyan-900
         dark:bg-gray-800 dark:border-gray-700
          dark:hover:bg-gray-700 ml-2 mr-2">
 
-        <h5 className="mb-2 text-xs font-bold tracking-tight text-gray-100 dark:text-white">
-            {title}
-        </h5>
-        <p className="font-normal text-xs text-gray-700 dark:text-gray-400">
-            {description}
-        </p>
+        <div className="basis-full flex text-center ">
+            <h5 className="basis-full text-sm font-bold dark:text-white">
+                {title}
+            </h5>
+        </div>
+
+        <div className="basis-full flex flex-row justify-between">
+            <Badge message={description} className="bg-nykBlue text-slate-50 " />
+        </div>
+
         {children}
     </div>
 )
