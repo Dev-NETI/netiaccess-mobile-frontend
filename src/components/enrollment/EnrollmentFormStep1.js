@@ -14,6 +14,7 @@ import { showResource, showResourceW2Param, indexResource } from '@/utils/resour
 import Loading from '../Loading'
 import { generateUniqueRegistrationNumber } from '@/utils/utils'
 import Back from '../Back'
+import * as Yup from 'yup'
 
 function EnrollmentFormStep1() {
     const [isChecked, setIsChecked] = useState(false)
@@ -25,7 +26,8 @@ function EnrollmentFormStep1() {
         dormitory: [],
         selectedSchedule: [],
     });
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const [validationError, setValidationError] = useState(true)
     const { show } = useSchedule()
     const { fetchDataWith2Params: getPaymentMode } = usePaymentMode()
     const { index: getTransportation } = useTransportation()
@@ -34,11 +36,18 @@ function EnrollmentFormStep1() {
     const fleetId = user.fleet_id
     const traineeName = user.f_name + " " + user.l_name
     const registrationNumber = generateUniqueRegistrationNumber()
+    const rules = Yup.object().shape({
+        scheduleId: Yup.string().required('Schedule is required!'),
+        paymentModeId: Yup.string().required('Payment mode is required!'),
+        busModeId: Yup.string().required('Bus mode is required!'),
+        dormId: isChecked && Yup.string().required('Dormitory is required!'),
+        checkInDate: isChecked && Yup.string().required('Check-in date is required!'),
+        checkOutDate: isChecked && Yup.string().required('Check-out date is required!'),
+    })
 
     useEffect(() => {
 
         const fetchData = async () => {
-            setLoading(true)
             await showResource(show, course, setFormOptions, "schedule")
             await showResourceW2Param(getPaymentMode, course, user.fleet_id, setFormOptions, "paymentMode")
             await indexResource(getTransportation, setFormOptions, "transportation")
@@ -47,33 +56,38 @@ function EnrollmentFormStep1() {
         }
 
         fetchData()
-
     }, [])
 
-    const handleChecked = () => {
-        setIsChecked(!isChecked);
-    }
-
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault()
 
         const fD = new FormData(event.target)
         const data = Object.fromEntries(fD.entries())
 
-        setFormData((prevState) => {
-            return {
-                ...prevState,
-                ...data,
-                isChecked,
-                course,
-                traineeId,
-                fleetId,
-                traineeName,
-                registrationNumber
-            }
-        })
+        try {
+            await rules.validate(data, { abortEarly: false })
+            setFormData((prevState) => {
+                return {
+                    ...prevState,
+                    ...data,
+                    isChecked,
+                    course,
+                    traineeId,
+                    fleetId,
+                    traineeName,
+                    registrationNumber
+                }
+            })
 
-        handleNextForm()
+            handleNextForm()
+        } catch (error) {
+            const errors = error.inner.reduce((acc, curr) => {
+                acc[curr.path] = curr.message;
+                return acc;
+            }, {});
+            setValidationError(errors)
+        }
+
     }
 
     function handleScheduleChange(scheduleId) {
@@ -89,7 +103,8 @@ function EnrollmentFormStep1() {
     const roomForm = isChecked && (
         <>
             <div className='basis-full mt-2'>
-                <SelectGroup label="Room" id="dormId" name="dormId" errorMessage="Please select a room!" >
+                <SelectGroup label="Room" id="dormId" name="dormId"
+                    isError={validationError.dormId} errorMessage={validationError.dormId} >
                     {
                         formOptions.dormitory.map((dormitory) => (
                             <option key={dormitory.dormid} value={dormitory.dormid}>{dormitory.dorm}</option>
@@ -98,16 +113,18 @@ function EnrollmentFormStep1() {
                 </SelectGroup>
             </div>
 
-            <div className='basis-full mt-2 flex flex-row gap-2 justify-between'>
-                <div className='basis-4/12'>
+            <div className='basis-full mt-2 flex flex-row  justify-between'>
+                <div className='basis-6/12 w-4'>
                     <InputGroup type="date" id="checkInDate" name="checkInDate" min={formOptions.selectedSchedule.startdateformat}
-                        defaultValue={formOptions.selectedSchedule.startdateformat} label="Check-in Date" errorMessage="Please select check in date!"
-                        required={isChecked} />
+                        defaultValue={formOptions.selectedSchedule.startdateformat} label="Check-in Date"
+                        isError={validationError.checkInDate} errorMessage={validationError.checkInDate}
+                    />
                 </div>
-                <div className='basis-4/12'>
+                <div className='basis-6/12 w-4'>
                     <InputGroup type="date" id="checkOutDate" name="checkOutDate" max={formOptions.selectedSchedule.enddateformat}
-                        defaultValue={formOptions.selectedSchedule.enddateformat} label="Check-in Date" errorMessage="Please select check in date!"
-                        required={isChecked} />
+                        defaultValue={formOptions.selectedSchedule.enddateformat} label="Check-in Date"
+                        isError={validationError.checkOutDate} errorMessage={validationError.checkOutDate}
+                    />
                 </div>
             </div>
         </>
@@ -126,8 +143,9 @@ function EnrollmentFormStep1() {
                     (
                         <form onSubmit={handleSubmit}>
                             <div className='basis-full mt-2'>
-                                <SelectGroup label="Schedule" id="scheduleId" name="scheduleId" errorMessage="Please select a schedule!"
-                                    onChange={(event) => handleScheduleChange(event.target.value)} required>
+                                <SelectGroup label="Schedule" id="scheduleId" name="scheduleId"
+                                    isError={validationError.scheduleId} errorMessage={validationError.scheduleId}
+                                    onChange={(event) => handleScheduleChange(event.target.value)} >
                                     <option value="">Select</option>
                                     {
                                         formOptions.schedule.map((schedule) => (
@@ -138,7 +156,8 @@ function EnrollmentFormStep1() {
                             </div>
 
                             <div className='basis-full mt-2'>
-                                <SelectGroup label="Payment Mode" id="paymentModeId" name="paymentModeId" errorMessage="Please select a payment mode!" required>
+                                <SelectGroup label="Payment Mode" id="paymentModeId" name="paymentModeId"
+                                    isError={validationError.paymentModeId} errorMessage={validationError.paymentModeId} >
                                     <option value="">Select</option>
                                     {
                                         formOptions.paymentMode.map((paymentMode) => (
@@ -149,7 +168,8 @@ function EnrollmentFormStep1() {
                             </div>
 
                             <div className='basis-full mt-2'>
-                                <SelectGroup label="Transportation" id="busModeId" name="busModeId" errorMessage="Please select a transportation!" required>
+                                <SelectGroup label="Transportation" id="busModeId" name="busModeId"
+                                    isError={validationError.busModeId} errorMessage={validationError.busModeId} >
                                     {
                                         formOptions.transportation.map((transportation) => (
                                             <option key={transportation.id} value={transportation.id} >{transportation.busmode}</option>
@@ -161,7 +181,7 @@ function EnrollmentFormStep1() {
                             {
                                 state.courseInfo.modeofdeliveryid !== 1 && (
                                     <div className="basis-full mt-2 flex items-center">
-                                        <Checkbox label="Tick the box if you want to avail a dormitory/room." onChange={handleChecked} checked={isChecked} />
+                                        <Checkbox label="Tick the box if you want to avail a dormitory/room." onChange={() => setIsChecked(!isChecked)} checked={isChecked} />
                                     </div>
                                 )
                             }

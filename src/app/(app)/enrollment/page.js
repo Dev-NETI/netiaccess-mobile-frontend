@@ -87,7 +87,7 @@ const CourseListPage = () => {
                 <div className="flex flex-col gap-3 mb-20">
                     {/* search courses */}
                     <div>
-                        <Input placeholder="Search..." onChange={(event) => showAllCourse(event.target.value)} />
+                        <Input className="shadow-lg shadow-gray-500" placeholder="Search..." onChange={(event) => showAllCourse(event.target.value)} />
                     </div>
 
                     {courseList}
