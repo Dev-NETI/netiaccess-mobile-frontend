@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react'
 
-function Modal({ title, children, buttonSlot, open, ...props }) {
+function Modal({ title = null, children, buttonSlot, open, bottomDivider = true, ...props }) {
     const dialogRef = useRef(null);
+    let dividerStyle = bottomDivider && 'border-b-2 border-stone-300'
 
     useEffect(() => {
         if (open) {
@@ -12,12 +13,12 @@ function Modal({ title, children, buttonSlot, open, ...props }) {
     }, [open])
 
     return (
-        <dialog ref={dialogRef} className='bg-stone-200 shadow-lg shadow-stone-700 rounded-lg' {...props}>
+        <dialog ref={dialogRef} className='bg-white shadow-lg shadow-stone-700 rounded-lg' {...props}>
             <div className="flex flex-col gap-2 w-80 ">
-                <div className='basis-full border-b-2 border-stone-300 py-3 mx-4'>
+                <div className={`${dividerStyle} basis-full py-3 mx-4`}>
                     <h2 className='text-xl font-sans font-extrabold'>{title}</h2>
                 </div>
-                <div className='basis-full border-b-2 border-stone-300 py-3 mx-4'>
+                <div className={`${dividerStyle} basis-full py-3 mx-4`}>
                     {children}
                 </div>
                 <div className='basis-full py-3 mx-4'>

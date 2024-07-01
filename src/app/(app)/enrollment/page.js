@@ -34,7 +34,7 @@ const CourseListPage = () => {
         }
         fetchUserInfo();
     }, []);
-
+    // userInfo.ranklevelid
     useEffect(() => {
         if (userInfo) {
             const fetchCourses = async () => {
@@ -65,8 +65,16 @@ const CourseListPage = () => {
         (
             <>
                 <CoursesList title="Mandatory" data={filteredCourses.mandatoryCourses} />
-                <CoursesList title="NMC" data={filteredCourses.nmcCourses} />
-                <CoursesList title="NMCR" data={filteredCourses.nmcrCourses} />
+                <CoursesList title={
+                    userInfo.ranklevelid === 5 || userInfo.ranklevelid === 6
+                        ? 'NMC'
+                        : 'NMCR'
+                }
+                    data={
+                        userInfo.ranklevelid === 5 || userInfo.ranklevelid === 6
+                            ? filteredCourses.nmcCourses
+                            : filteredCourses.nmcrCourses
+                    } />
                 <CoursesList title="PJMCC" data={filteredCourses.pjmccCourses} />
                 <CoursesList title="Upgrading" data={filteredCourses.upgradingCourses} />
                 <CoursesList title="Other Government" data={filteredCourses.otherCourses} />

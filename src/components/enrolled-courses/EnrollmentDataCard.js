@@ -1,6 +1,6 @@
 import React from 'react'
 
-function EnrollmentDataCard({course,trainingDate}) {
+function EnrollmentDataCard({ course, courseName, ...props }) {
     return (
         <div className='basis-full px-3  mx-5 
                             shadow-lg shadow-stone-600 rounded-xl 
@@ -13,11 +13,11 @@ function EnrollmentDataCard({course,trainingDate}) {
                                 flex flex-col gap-3'>
                 <div className='basis-full'>
                     <p className='text-stone-900 font-bold '>{course}</p>
-                    <p className='text-gray-400 text-sm font-semibold italic '>{trainingDate}</p>
+                    <p className='text-gray-400 text-sm font-semibold italic '>{courseName}</p>
                 </div>
 
                 <div className='basis-full flex justify-end'>
-                    <button className='bg-sky-600 px-2 py-1 rounded-lg text-stone-300 text-sm' >View</button>
+                    <button className='bg-nykBlue px-2 py-1 rounded-lg text-slate-50 text-sm' {...props} >View</button>
                 </div>
 
             </div>
