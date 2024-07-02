@@ -13,7 +13,7 @@ import Button from '@/components/Button';
 import { indexResource, showResource } from '@/utils/resource';
 import Loading from '@/components/Loading';
 
-function AddressForm() {
+function AddressForm({ initialData = {} }) {
     const [selectedSwitch, setSelectedSwitch] = useState(1);
     const [dropdownData, setDropdownData] = useState({
         regionData: null,
@@ -69,13 +69,11 @@ function AddressForm() {
 
         try {
             await rules.validate(data, { abortEarly: false });
-            setTraineeData((prevState) => {
-                return {
-                    ...prevState,
-                    ...data,
-                    selectedSwitch
-                }
-            });
+            setTraineeData(prevState => ({
+                ...prevState,
+                ...data,
+                selectedSwitch
+            }));
 
             handleNextProcess();
         } catch (error) {
@@ -93,45 +91,51 @@ function AddressForm() {
             return (
                 <>
                     <div className="w-full">
-                        <SelectGroup id="region" name="region" label="Region" errorMessage={validationError && validationError.region} isError={validationError && validationError.region}
+                        <SelectGroup id="region" name="region" label="Region"
+                            errorMessage={validationError && validationError.region} isError={validationError && validationError.region}
                             onChange={(event) => showResource(showProvince, event.target.value, setDropdownData, 'provinceData')}  >
-                            <SelectOption id="" label="Select" />
+                            {initialData ? <SelectOption id={initialData.regCode} label={initialData.region} /> : <SelectOption id="" label="Select" />}
                             {dropdownData.regionData?.map((data) => <SelectOption key={data.regCode} id={data.regCode} label={data.regDesc} />)}
                         </SelectGroup>
                     </div>
                     <div className="w-full">
-                        <SelectGroup id="province" name="province" label="Province" errorMessage={validationError && validationError.province} isError={validationError && validationError.province}
+                        <SelectGroup id="province" name="province" label="Province"
+                            errorMessage={validationError && validationError.province} isError={validationError && validationError.province}
                             onChange={(event) => showResource(showCity, event.target.value, setDropdownData, 'cityData')}  >
-                            <SelectOption id="" label="Select" />
+                            {initialData ? <SelectOption id={initialData.provCode} label={initialData.state} /> : <SelectOption id="" label="Select" />}
                             {dropdownData.provinceData && dropdownData.provinceData?.map((data) => <SelectOption key={data.provCode} id={data.provCode} label={data.provDesc} />)}
                         </SelectGroup>
                     </div>
                     <div className="w-full">
-                        <SelectGroup id="city" name="city" label="City" errorMessage={validationError && validationError.city} isError={validationError && validationError.city}
+                        <SelectGroup id="city" name="city" label="City"
+                            errorMessage={validationError && validationError.city} isError={validationError && validationError.city}
                             onChange={(event) => showResource(showBrgy, event.target.value, setDropdownData, 'brgyData')}  >
-                            <SelectOption id="" label="Select" />
+                            {initialData ? <SelectOption id={initialData.cityCode} label={initialData.city} /> : <SelectOption id="" label="Select" />}
                             {dropdownData.cityData && dropdownData.cityData?.map((data) => <SelectOption key={data.citymunCode} id={data.citymunCode} label={data.citymunDesc} />)}
                         </SelectGroup>
                     </div>
                     <div className="w-full">
-                        <SelectGroup id="brgy" name="brgy" label="Brgy" errorMessage={validationError && validationError.brgy} isError={validationError && validationError.brgy}  >
-                            <SelectOption id="" label="Select" />
+                        <SelectGroup id="brgy" name="brgy" label="Brgy"
+                            errorMessage={validationError && validationError.brgy} isError={validationError && validationError.brgy}  >
+                            {initialData ? <SelectOption id={initialData.brgyCode} label={initialData.brgy} /> : <SelectOption id="" label="Select" />}
                             {dropdownData.brgyData && dropdownData.brgyData?.map((data) => <SelectOption key={data.brgyCode} id={data.brgyCode} label={data.brgyDesc} />)}
                         </SelectGroup>
                     </div>
                     <div className="w-full">
-                        <InputGroup id="street" name="street" label="Street" placeholder="Enter Street" errorMessage={validationError && validationError.street} isError={validationError && validationError.street} />
+                        <InputGroup id="street" name="street" label="Street" defaultValue={initialData.street || ''}
+                            placeholder="Enter Street" errorMessage={validationError && validationError.street} isError={validationError && validationError.street} />
                     </div>
                     <div className="w-full">
-                        <InputGroup id="postalCode" name="postalCode" label="Postal Code" placeholder="Enter Postal Code" errorMessage={validationError && validationError.postalCode} isError={validationError && validationError.postalCode} />
+                        <InputGroup id="postalCode" name="postalCode" label="Postal Code" defaultValue={initialData.postalCode || ''}
+                            placeholder="Enter Postal Code" errorMessage={validationError && validationError.postalCode} isError={validationError && validationError.postalCode} />
                     </div>
                 </>
             )
         } else {
             return (
                 <div className="w-full">
-                    <InputGroup id="fullAddress" name="fullAddress" label="Full Address" placeholder="Enter Full Address"
-                        errorMessage={validationError && validationError.fullAddress} isError={validationError && validationError.fullAddress} />
+                    <InputGroup id="fullAddress" name="fullAddress" label="Full Address" defaultValue={initialData.address || ''}
+                        placeholder="Enter Full Address" errorMessage={validationError && validationError.fullAddress} isError={validationError && validationError.fullAddress} />
                 </div>
             )
         }

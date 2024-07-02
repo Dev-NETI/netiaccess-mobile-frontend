@@ -1,8 +1,5 @@
-import ApplicationLogo from '@/components/ApplicationLogo'
 import Dropdown from '@/components/Dropdown'
-import Link from 'next/link'
-import NavLink from '@/components/NavLink'
-import ResponsiveNavLink, {
+import {
     ResponsiveNavButton,
 } from '@/components/ResponsiveNavLink'
 import { DropdownButton } from '@/components/DropdownLink'
@@ -19,7 +16,9 @@ const Navigation = ({ user }) => {
             {/* Primary Navigation Menu */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-36">
-                    <div className="flex">
+
+                    <div className="flex justify-center items-center">
+                        {/* <AppLogo /> */}
                     </div>
 
                     {/* Settings Dropdown */}

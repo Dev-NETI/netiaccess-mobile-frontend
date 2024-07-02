@@ -10,7 +10,7 @@ function ProfileImage() {
 
     return (
         <>
-            <div className='basis-full flex justify-center py-5'>
+            <div className='basis-full bg-white flex justify-center py-5 rounded-t-3xl '>
                 <Image
                     src={blankDp}
                     alt="Picture of the author"
@@ -19,8 +19,8 @@ function ProfileImage() {
                     height={100}
                 />
             </div>
-            <div className='basis-full flex flex-col justify-center'>
-                <p className='font-bold font-sans text-lg mx-auto'>
+            <div className='basis-full bg-white flex flex-col justify-center'>
+                <p className='font-bold font-sans text-xl mx-auto'>
                     {traineeName}
                 </p>
             </div>

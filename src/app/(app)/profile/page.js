@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense, useEffect, useState } from 'react'
+import React from 'react'
 import { useAuth } from '@/hooks/auth'
 import { TraineeContext } from '@/stores/TraineeContext'
 import ProfileImage from '@/components/profile/ProfileImage'
@@ -11,11 +11,10 @@ function Profile() {
 
     return (
         <TraineeContext.Provider value={{ user }}>
-            <div className='flex flex-col gap-2 mx-4 my-4 
-        bg-white rounded-2xl shadow-lg'>
-                <ProfileImage />
-                <ProfileInformation />
-            </div>
+
+            <ProfileImage />
+            <ProfileInformation />
+
         </TraineeContext.Provider>
     )
 }
