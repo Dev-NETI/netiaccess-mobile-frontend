@@ -11,7 +11,7 @@ function ProfileInformation() {
             <div className='flex flex-col gap-2 mt-9 mx-8'>
                 <InformationLinkItem href={`/profile/personal-information`} label="Personal Information" />
                 <InformationLinkItem href={`/profile/address`} label="Address" />
-                <InformationLinkItem href="/dashboard" label="Employment Information" />
+                <InformationLinkItem href="/profile/employment" label="Employment Information" />
                 <InformationLinkItem href={`/profile/contact`} label="Contact Information" />
                 <InformationLinkItem href={`/profile/password`} label="Password" />
             </div>

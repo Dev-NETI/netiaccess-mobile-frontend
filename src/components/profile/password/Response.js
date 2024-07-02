@@ -31,12 +31,12 @@ function ResponseView({ response,
                     {label}
                 </p>
             </div>
-            <div className='basis-full px-5 flex justify-center'>
+            <div className='basis-full p-5 flex justify-center'>
                 <p className='font-bold text-sm italic text-gray-600 text-justify' >
                     {description}
                 </p>
             </div>
-            <div className='basis-full px-5 flex justify-center'>
+            <div className='basis-full p-5 flex justify-center'>
                 <Link href={defaultRoute === null ? route : defaultRoute} className='w-full'>
                     <Button type="submit" >
                         {defaultButtonLabel === null ? buttonLabel : defaultButtonLabel}
