@@ -7,6 +7,7 @@ import Paragraph from '@/components/Paragraph'
 import Button from '@/components/Button'
 import Badge from '@/components/Badge'
 import { generateRandomNumbers } from '@/utils/utils'
+import { handleInputChange } from '@/utils/utils'
 
 function VerifyContactForm({ buttonLabel = "Create Account" }) {
     const { setTraineeData, handleNextProcess } = useContext(RegisterContext)
@@ -18,29 +19,7 @@ function VerifyContactForm({ buttonLabel = "Create Account" }) {
     }, [])
     console.log(verificateCode);
 
-    // Event handler to move focus to the next or previous input
-    const handleInputChange = (e) => {
-        const currentInputId = e.target.id;
-        const currentInputIndex = parseInt(currentInputId.replace('input', ''));
 
-        // Move focus to the next input if a number is entered
-        if (e.target.value.length === 1) {
-            const nextInputId = `input${currentInputIndex + 1}`;
-            const nextInput = document.getElementById(nextInputId);
-            if (nextInput) {
-                nextInput.focus();
-            }
-        }
-
-        // Move focus to the previous input if backspace is pressed and input is empty
-        if (e.key === 'Backspace' && e.target.value.length === 0) {
-            const prevInputId = `input${currentInputIndex - 1}`;
-            const prevInput = document.getElementById(prevInputId);
-            if (prevInput) {
-                prevInput.focus();
-            }
-        }
-    };
 
     const handleSubmit = (event) => {
         event.preventDefault();

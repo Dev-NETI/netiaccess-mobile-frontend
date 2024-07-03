@@ -1,33 +1,59 @@
 'use client'
 import React, { useState } from 'react'
 import PasswordHeader from '@/components/profile/password/header'
-import ResetPasswordForm from '@/components/profile/password/ResetPasswordForm'
 import ResponseView from '@/components/profile/password/Response'
 import { useAuth } from '@/hooks/auth'
+import EnterEmailComponent from '@/components/profile/password/EnterEmailComponent'
+import { ProfileContext } from '@/stores/ProfileContext'
+import * as Yup from 'yup'
+import VerificationFields from '@/components/profile/password/VerificationFields'
+import PasswordForm from '@/components/profile/password/PasswordForm'
 
 function page() {
-    const [response, setResponse] = useState(null);
-    const [verified, setVerified] = useState(false);
+    const [utilsState, setUtilsState] = useState({
+        verified: false,
+        updateResponse: null,
+        activeForm: 1,
+        updateResponse: null,
+    });
     const { user } = useAuth({ middleware: 'auth' })
-    const title = verified ? 'Create New Password' : 'Reset Password';
-    const label = verified ? 'This password should be different from your previous password.' : 'Please enter the email address associated with your account, and we will send you an email with a verification code to reset your password.';
 
-    let UI = response === null ?
-        (
-            <>
-                <PasswordHeader title={title} label={label} />
-                <ResetPasswordForm traineeId={user.traineeid} handleResponse={setResponse} />
-            </>
-        )
-        :
-        <ResponseView response={response} />
+    let title, label, ui;
+    switch (utilsState.activeForm) {
+        case 1:
+            title = "Enter email"
+            label = "We need to verify your registered email before we update your password."
+            ui = <EnterEmailComponent />
+            break;
+        case 2:
+            title = "Enter verification code"
+            label = "We need to verify your registered email before we update your password."
+            ui = <VerificationFields />
+            break;
+        case 3:
+            title = "New Password"
+            label = "Please enter a new and strong password."
+            ui = <PasswordForm />
+            break;
+        default:
+            title = ""
+            label = ""
+            ui = <div className='basis-full bg-white'>
+                <ResponseView response={utilsState.updateResponse} successLabel="Password updated successfully!"
+                    defaultRoute="/profile" defaultButtonLabel="Go to profile" />
+            </div>
+            break;
+    }
 
     return (
-        <div className='flex flex-col gap-4 bg-gray-50 mx-10 my-10 py-4
-        border-0 rounded-xl shadow-xl'>
-            {UI}
-        </div>
+        <ProfileContext.Provider value={{ Yup, user, setUtilsState }}>
+            <div className='basis-full bg-white rounded-t-3xl flex flex-col gap-2 '>
+                {<PasswordHeader title={title} label={label} />}
+            </div>
+            {ui}
+        </ProfileContext.Provider>
     )
+
 }
 
 export default page

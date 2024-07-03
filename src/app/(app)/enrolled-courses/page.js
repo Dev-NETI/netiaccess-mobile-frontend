@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import Header from '../Header'
 import Input from '@/components/Input'
 import { useEnrollment } from '@/hooks/api/enrollment'
-import { showResource } from '@/utils/resource'
 import { useAuth } from '@/hooks/auth'
 import EnrollmentDataCard from '@/components/enrolled-courses/EnrollmentDataCard'
 import SmallToggleSwitch from '@/components/SmallToggleSwitch'
@@ -29,7 +28,8 @@ function EnrolledCourses() {
 
     useEffect(() => {
         const fetchData = async () => {
-            await showResource(show, user.traineeid, setData, 'enrollmentData')
+            const { data } = await show(user.traineeid)
+            data && setData(prevState => ({ ...prevState, enrollmentData: data }))
             setUtilsState(prevState => ({ ...prevState, loading: false }))
         }
         fetchData()

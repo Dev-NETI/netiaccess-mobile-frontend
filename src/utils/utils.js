@@ -40,9 +40,34 @@ const generateRandomNumbers = () => {
     return randomNumbersString;
 };
 
+// Event handler to move focus to the next or previous input
+const handleInputChange = (e) => {
+    const currentInputId = e.target.id;
+    const currentInputIndex = parseInt(currentInputId.replace('input', ''));
+
+    // Move focus to the next input if a number is entered
+    if (e.target.value.length === 1) {
+        const nextInputId = `input${currentInputIndex + 1}`;
+        const nextInput = document.getElementById(nextInputId);
+        if (nextInput) {
+            nextInput.focus();
+        }
+    }
+
+    // Move focus to the previous input if backspace is pressed and input is empty
+    if (e.key === 'Backspace' && e.target.value.length === 0) {
+        const prevInputId = `input${currentInputIndex - 1}`;
+        const prevInput = document.getElementById(prevInputId);
+        if (prevInput) {
+            prevInput.focus();
+        }
+    }
+};
+
 export {
     formatDate,
     generateUniqueRegistrationNumber,
     handleSetMethod,
     generateRandomNumbers,
+    handleInputChange
 }
