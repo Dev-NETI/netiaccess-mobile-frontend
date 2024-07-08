@@ -9,6 +9,7 @@ import Badge from '@/components/Badge'
 import { generateRandomNumbers } from '@/utils/utils'
 import { handleInputChange } from '@/utils/utils'
 import ProgressBarComponent from '@/components/ProgressBarComponent'
+import VerificationCodeField from '../VerificationCodeField'
 
 function VerifyContactForm({ buttonLabel = "Create Account" }) {
     const { setTraineeData, handleNextProcess } = useContext(RegisterContext)
@@ -48,18 +49,7 @@ function VerifyContactForm({ buttonLabel = "Create Account" }) {
                 <Paragraph value="A verification code has been sent to your email and mobile number." className=" text-sm text-red-400 " />
             </div>
             <div className="flex flex-row gap-2">
-                <Input className="basis-2/12" id="input1" name="input1" type="number"
-                    onKeyUp={handleInputChange} required autoFocus />
-                <Input className="basis-2/12" id="input2" name="input2" type="number"
-                    onKeyUp={handleInputChange} required />
-                <Input className="basis-2/12" id="input3" name="input3" type="number"
-                    onKeyUp={handleInputChange} required />
-                <Input className="basis-2/12" id="input4" name="input4" type="number"
-                    onKeyUp={handleInputChange} required />
-                <Input className="basis-2/12" id="input5" name="input5" type="number"
-                    onKeyUp={handleInputChange} required />
-                <Input className="basis-2/12" id="input6" name="input6" type="number"
-                    onKeyUp={handleInputChange} required />
+                <VerificationCodeField handleInputChange={handleInputChange} />
             </div>
             <div className='w-full mt-4 flex justify-end'>
                 {timeLeft === 0 && <p className='text-blue-700 text-xs' onClick={() => setTimeLeft(60)}>Didn't receive code? Click here to resend</p>}
