@@ -6,6 +6,7 @@ import { generateRandomNumbers } from '@/utils/utils'
 import { ProfileContext } from '@/stores/ProfileContext'
 import { useContext } from 'react'
 import Badge from '@/components/Badge'
+import ProgressBarComponent from '@/components/ProgressBarComponent'
 
 function VerificationFields() {
     const [verificationCode, setVerificationCode] = useState()
@@ -18,17 +19,6 @@ function VerificationFields() {
         setVerificationCode(generateRandomNumbers)
     }, [])
     console.log(verificationCode)
-
-    useEffect(() => {
-        if (timeLeft > 0) {
-            const timerId = setTimeout(() => {
-                setTimeLeft(timeLeft - 1);
-                setProgress((timeLeft - 1) * (100 / 60));
-            }, 1000);
-
-            return () => clearTimeout(timerId);
-        }
-    }, [timeLeft]);
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -87,10 +77,9 @@ function VerificationFields() {
                 timeLeft > 0
                 &&
                 <div className='basis-full bg-white px-6'>
-                    <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
-                        <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-                            style={{ width: `${progress}%` }}>{timeLeft} seconds to resend.</div>
-                    </div>
+                    <ProgressBarComponent progress={progress}
+                        handleSetProgress={setProgress} timeLeft={timeLeft}
+                        handleSetTimeLeft={setTimeLeft} label="seconds to resend." />
                 </div>
             }
         </form >

@@ -41,7 +41,7 @@ function Contact() {
         case 1:
             activeForm = <div className='basis-full rounded-t-lg bg-white'>
                 <PasswordHeader title="Update Contact Information" label={headerLabel} />
-                <div className='px-5'>
+                <div className='px-7 mt-5'>
                     <ContactForm />
                 </div>
             </div>

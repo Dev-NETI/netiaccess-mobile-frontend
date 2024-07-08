@@ -6,13 +6,15 @@ import { useEffect, useState } from 'react'
 import ResponseView from '@/components/profile/password/Response'
 import { RegisterContext } from '@/stores/RegisterContext'
 import { useTrainee } from '@/hooks/api/trainee'
+import * as Yup from 'yup'
 
 function PersonalInformationForm() {
-  const [traineeData, setTraineeData] = useState(null);
-  const [activeForm, setActiveForm] = useState(1);
   const { user } = useAuth({ middleware: 'auth' })
-  const title = "Personal Information"
-  const label = "Here you can update your personal information."
+  const [traineeData, setTraineeData] = useState(null);
+  const [utilsState, setUtilsState] = useState({
+    activeForm: 1,
+    requestResponse: null,
+  })
   const initialData = {
     firstname: user.f_name,
     middlename: user.m_name,
@@ -22,38 +24,42 @@ function PersonalInformationForm() {
     placeOfBirth: user.birthplace,
     nationalityId: user.nationalityid,
     genderId: user.genderid,
-  }
-  const [requestResponse, setRequestResponse] = useState();
-  const { patch } = useTrainee()
+  };
+  const title = "Personal Information"
+  const label = "Here you can update your personal information."
+  const { update: updateTrainee } = useTrainee()
 
   useEffect(() => {
     if (traineeData !== null) {
-      const response = patch(user.id, traineeData)
-      setRequestResponse(response);
-      setActiveForm(activeForm + 1)
-      return
+      const update = async () => {
+        const { data } = await updateTrainee(user.traineeid, traineeData)
+        setUtilsState(prevState => ({ ...prevState, requestResponse: data }));
+        setUtilsState(prevState => ({ ...prevState, activeForm: 2 }))
+        return
+      }
+      update()
     }
   }, [traineeData])
 
   let UI;
-  if (activeForm === 1) {
-    UI = <>
+  if (utilsState.activeForm === 1) {
+    UI = <div className='basis-full rounded-t-lg bg-white'>
       <PasswordHeader title={title} label={label} />
 
-      <div className='basis-full px-5 mb-5'>
+      <div className='basis-full bg-white px-5 mb-24'>
         <PersonalInfoForm initialData={initialData} mode="update" />
       </div>
-    </>
+    </div>
   } else {
-    UI = <ResponseView response={requestResponse} successLabel='Personal Information Updated!' defaultRoute="/profile" defaultButtonLabel="Go to profile" />
+    UI = <div className='basis-full rounded-t-lg bg-white'>
+      <ResponseView response={utilsState.requestResponse} successLabel='Personal Information Updated!'
+        defaultRoute="/profile" defaultButtonLabel="Go to profile" />
+    </div>
   }
 
   return (
-    <RegisterContext.Provider value={{ traineeData, setTraineeData }} >
-      <div className='flex flex-col gap-4 bg-gray-50 mx-10 my-10 py-4 
-        border-0 rounded-xl shadow-xl'>
-        {UI}
-      </div>
+    <RegisterContext.Provider value={{ traineeData, setTraineeData, Yup }} >
+      {UI}
     </RegisterContext.Provider>
   )
 }

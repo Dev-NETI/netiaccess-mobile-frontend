@@ -8,7 +8,7 @@ function PasswordHeader({ title, label }) {
                     {title}
                 </p>
             </div>
-            <div className='basis-full px-5'>
+            <div className='basis-full px-5 py-2'>
                 <p className='font-bold text-sm text-stone-500 font-sans italic text-justify'>
                     {label}
                 </p>

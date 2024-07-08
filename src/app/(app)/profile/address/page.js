@@ -32,7 +32,7 @@ function UpdateAddress() {
     useEffect(() => {
         const fetchData = async () => {
             const { data } = await getAddress(user.traineeid);
-            setInitialData(prevState => ({ ...prevState, ...data }))
+            data && setInitialData(prevState => ({ ...prevState, ...data }))
             setUtilState(prevState => ({ ...prevState, loading: false }))
         }
         fetchData();

@@ -21,19 +21,9 @@ function PersonalInfoForm({ initialData = {}, mode = "store" }) {
         selectedNationality: null,
     });
     const [loading, setLoading] = useState(true);
-    const [formData, setFormData] = useState({
-        firstname: initialData.firstname || "",
-        middlename: initialData.middlename || "",
-        lastname: initialData.lastname || "",
-        suffix: initialData.suffix || "",
-        dateOfBirth: initialData.dateOfBirth || "",
-        placeOfBirth: initialData.placeOfBirth || "",
-        genderId: initialData.genderId || "",
-        nationalityId: initialData.nationalityId || "",
-    });
+    const [validationError, setValidationError] = useState([])
     const { index: getNationality, show: showNationality } = useNationality();
     const { index: getGender, show: showGender } = useGender();
-    const [validationError, setValidationError] = useState([])
     const rules = Yup.object().shape({
         firstname: Yup.string().required('Firstname is required!'),
         middlename: Yup.string().required('Middlename is required'),
@@ -47,8 +37,8 @@ function PersonalInfoForm({ initialData = {}, mode = "store" }) {
     useEffect(() => {
         const fetchData = async () => {
             if (mode !== 'store') {
-                await showResource(showGender, formData.genderId, setDropdownData, 'selectedGender')
-                await showResource(showNationality, formData.nationalityId, setDropdownData, 'selectedNationality')
+                await showResource(showGender, initialData.genderId, setDropdownData, 'selectedGender')
+                await showResource(showNationality, initialData.nationalityId, setDropdownData, 'selectedNationality')
             }
             await indexResource(getNationality, setDropdownData, 'nationalityData')
             await indexResource(getGender, setDropdownData, 'genderData')
@@ -79,18 +69,12 @@ function PersonalInfoForm({ initialData = {}, mode = "store" }) {
             }
 
         } catch (error) {
-            // array form
-            // if (error instanceof Yup.ValidationError) {
-            //     const errors = error.inner.map(err => ({ path: err.path, message: err.message }));
-            //     setValidationError(errors);
-            // }
             const errors = error.inner.reduce((acc, curr) => {
                 acc[curr.path] = curr.message;
                 return acc;
             }, {});
             setValidationError(errors);
         }
-
     }
 
     let ui = loading
@@ -104,33 +88,35 @@ function PersonalInfoForm({ initialData = {}, mode = "store" }) {
         (
             <>
                 <div className="w-full">
-                    <InputGroup defaultValue={formData.firstname} id="firstname" name="firstname" label="Firstname" placeholder="Firstname" isError={validationError.firstname} errorMessage={validationError.firstname} />
+                    <InputGroup defaultValue={initialData.firstname || ""} id="firstname" name="firstname" label="Firstname" placeholder="Firstname" isError={validationError.firstname} errorMessage={validationError.firstname} />
                 </div>
                 <div className="w-full">
-                    <InputGroup defaultValue={formData.middlename} id="middlename" name="middlename" label="Middlename" placeholder="Middlename" isError={validationError.middlename} errorMessage={validationError.middlename} />
+                    <InputGroup defaultValue={initialData.middlename || ""} id="middlename" name="middlename" label="Middlename" placeholder="Middlename" isError={validationError.middlename} errorMessage={validationError.middlename} />
                 </div>
                 <div className="w-full">
-                    <InputGroup defaultValue={formData.lastname} id="lastname" name="lastname" label="Lastname" placeholder="Lastname" isError={validationError.lastname} errorMessage={validationError.lastname} />
+                    <InputGroup defaultValue={initialData.lastname || ""} id="lastname" name="lastname" label="Lastname" placeholder="Lastname" isError={validationError.lastname} errorMessage={validationError.lastname} />
                 </div>
                 <div className="w-full">
-                    <InputGroup defaultValue={formData.suffix} id="suffix" name="suffix" label="Suffix" placeholder="Suffix" errorMessage="This is a test error message!" />
+                    <InputGroup defaultValue={initialData.suffix || ""} id="suffix" name="suffix" label="Suffix" placeholder="Suffix" errorMessage="This is a test error message!" />
                 </div>
                 <div className="w-full">
-                    <InputGroup defaultValue={formData.dateOfBirth} type="date" id="dateOfBirth" name="dateOfBirth" label="Date of birth" placeholder="Date of birth" isError={validationError.dateOfBirth} errorMessage={validationError.dateOfBirth} />
+                    <InputGroup defaultValue={initialData.dateOfBirth || ""} type="date" id="dateOfBirth" name="dateOfBirth" label="Date of birth" placeholder="Date of birth" isError={validationError.dateOfBirth} errorMessage={validationError.dateOfBirth} />
                 </div>
                 <div className="w-full">
-                    <InputGroup defaultValue={formData.placeOfBirth} id="placeOfBirth" name="placeOfBirth" label="Place of birth" placeholder="Place of birth" isError={validationError.placeOfBirth} errorMessage={validationError.placeOfBirth} />
+                    <InputGroup defaultValue={initialData.placeOfBirth || ""} id="placeOfBirth" name="placeOfBirth" label="Place of birth" placeholder="Place of birth" isError={validationError.placeOfBirth} errorMessage={validationError.placeOfBirth} />
                 </div>
                 <div className="w-full">
                     <SelectGroup label="Gender" id="gender" name="gender" isError={validationError.gender} errorMessage={validationError.gender}  >
-                        {mode !== 'store' ? <SelectOption id={dropdownData.selectedGender?.genderid} label={dropdownData.selectedGender?.gender} />
+                        {mode !== 'store'
+                            ? <SelectOption id={dropdownData.selectedGender?.genderid} label={dropdownData.selectedGender?.gender} />
                             : <SelectOption id="" label="Select" />}
                         {dropdownData.genderData?.map((data) => <SelectOption key={data.genderid} id={data.genderid} label={data.gender} />)}
                     </SelectGroup>
                 </div>
                 <div className="w-full">
                     <SelectGroup label="Nationality" id="nationality" name="nationality" isError={validationError.nationality} errorMessage={validationError.nationality}  >
-                        {mode !== 'store' ? <SelectOption id={dropdownData.selectedNationality?.nationalityid} label={dropdownData.selectedNationality?.nationality} />
+                        {mode !== 'store'
+                            ? <SelectOption id={dropdownData.selectedNationality?.nationalityid} label={dropdownData.selectedNationality?.nationality} />
                             : <SelectOption id="" label="Select" />}
                         {dropdownData.nationalityData?.map((data) => <SelectOption key={data.nationalityid} id={data.nationalityid} label={data.nationality} />)}
                     </SelectGroup>

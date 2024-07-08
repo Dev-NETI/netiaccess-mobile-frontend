@@ -8,11 +8,14 @@ import Button from '@/components/Button'
 import Badge from '@/components/Badge'
 import { generateRandomNumbers } from '@/utils/utils'
 import { handleInputChange } from '@/utils/utils'
+import ProgressBarComponent from '@/components/ProgressBarComponent'
 
 function VerifyContactForm({ buttonLabel = "Create Account" }) {
     const { setTraineeData, handleNextProcess } = useContext(RegisterContext)
     const [error, setError] = useState(false);
     const [verificateCode, setVerificationCode] = useState();
+    const [timeLeft, setTimeLeft] = useState(0);
+    const [progress, setProgress] = useState(100);
 
     useEffect(() => {
         setVerificationCode(generateRandomNumbers());
@@ -40,7 +43,7 @@ function VerifyContactForm({ buttonLabel = "Create Account" }) {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className="w-full">
+            <div className="w-full  py-5">
                 <H2 value="Enter verification code" />
                 <Paragraph value="A verification code has been sent to your email and mobile number." className=" text-sm text-red-400 " />
             </div>
@@ -57,6 +60,11 @@ function VerifyContactForm({ buttonLabel = "Create Account" }) {
                     onKeyUp={handleInputChange} required />
                 <Input className="basis-2/12" id="input6" name="input6" type="number"
                     onKeyUp={handleInputChange} required />
+            </div>
+            <div className='w-full mt-4 flex justify-end'>
+                {timeLeft === 0 && <p className='text-blue-700 text-xs' onClick={() => setTimeLeft(60)}>Didn't receive code? Click here to resend</p>}
+                {timeLeft > 0 && <ProgressBarComponent progress={progress} handleSetProgress={setProgress} timeLeft={timeLeft}
+                    handleSetTimeLeft={setTimeLeft} label="seconds to resend." />}
             </div>
             <div className='w-full mt-4'>
                 {error && <Badge className="basis-full  text-stone-200 text-xl bg-red-700" message="Verification code invalid!" />}
