@@ -4,17 +4,34 @@ import { handleInputChange } from '@/utils/utils'
 import { generateRandomNumbers } from '@/utils/utils';
 import Badge from '@/components/Badge';
 import Button from '@/components/Button';
+import ProgressBarComponent from '@/components/ProgressBarComponent';
+import { useEmail } from '@/hooks/api/email'
 
-function VerifyEmailForm({ handleSetState }) {
+function VerifyEmailForm({ handleSetState, enteredEmail }) {
     const [utilState, setUtilState] = useState({
         verificationCode: null,
         error: null,
     })
+    const [timeLeft, setTimeLeft] = useState(60);
+    const [progress, setProgress] = useState(100);
+    const { fetchDataWith2Params: sendVerificationCode } = useEmail("send-verification-code")
 
     useEffect(() => {
-        setUtilState(prevState => ({ ...prevState, verificationCode: generateRandomNumbers() }))
-    }, [])
-    console.log(utilState.verificationCode)
+        if (timeLeft === 60) {
+            setUtilState(prevState => ({ ...prevState, verificationCode: generateRandomNumbers() }))
+        }
+    }, [timeLeft])
+
+    useEffect(() => {
+        if (utilState.verificationCode !== null) {
+            send()
+            // console.log(verificateCode);
+        }
+    }, [utilState.verificationCode])
+
+    const send = async () => {
+        const { data } = await sendVerificationCode(enteredEmail, utilState.verificationCode)
+    }
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -40,6 +57,20 @@ function VerifyEmailForm({ handleSetState }) {
                 {utilState.error && <Badge className="bg-red-400 text-red-800" message={utilState.error && 'Invalid verification code!'} />}
             </div>
             <Button className='mt-2' >Verify</Button>
+            <div className='flex mt-2'>
+                {timeLeft === 0
+                    && <p className='text-xs text-blue-600 underline'
+                        onClick={() => {
+                            setUtilState(prevState => ({ ...prevState, verificationCode: generateRandomNumbers() }))
+                            setTimeLeft(60)
+                        }}>
+                        Didn't receive verification code? Click here to resend.
+                    </p>}
+                {timeLeft > 0
+                    && <ProgressBarComponent progress={progress}
+                        handleSetProgress={setProgress} timeLeft={timeLeft}
+                        handleSetTimeLeft={setTimeLeft} label="seconds to resend." />}
+            </div>
         </form>
     )
 }

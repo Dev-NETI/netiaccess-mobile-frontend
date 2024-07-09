@@ -81,7 +81,7 @@ const Page = () => {
             break;
         case 2:
             viewLabel = 'Please enter the verification code that has been sent to your email address.'
-            ui = <VerifyEmailForm handleSetState={setUtilState} />
+            ui = <VerifyEmailForm handleSetState={setUtilState} enteredEmail={utilState.enteredEmail} />
             break;
         case 3:
             viewLabel = 'Please input a strong password!'
