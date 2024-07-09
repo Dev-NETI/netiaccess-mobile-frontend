@@ -18,7 +18,7 @@ function Register() {
 
     // just log to check if traineedata is updating between forms, uncomment to check
     useEffect(() => {
-        console.log(traineeData);
+        // console.log(traineeData);
     }, [traineeData]);
 
     function handleNextProcess() {
@@ -40,7 +40,7 @@ function Register() {
                 return <ContactForm />
                 break;
             case 5:
-                return <VerifyContactForm />
+                return <VerifyContactForm buttonLabel="Verify" />
                 break;
             default:
                 return <CredentialForm />

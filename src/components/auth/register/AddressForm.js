@@ -94,7 +94,7 @@ function AddressForm({ initialData = {} }) {
                         <SelectGroup id="region" name="region" label="Region"
                             errorMessage={validationError && validationError.region} isError={validationError && validationError.region}
                             onChange={(event) => showResource(showProvince, event.target.value, setDropdownData, 'provinceData')}  >
-                            {initialData ? <SelectOption id={initialData.regCode} label={initialData.region} /> : <SelectOption id="" label="Select" />}
+                            {initialData.length > 0 ? <SelectOption id={initialData.regCode} label={initialData.region} /> : <SelectOption id="" label="Select" />}
                             {dropdownData.regionData?.map((data) => <SelectOption key={data.regCode} id={data.regCode} label={data.regDesc} />)}
                         </SelectGroup>
                     </div>
@@ -102,7 +102,7 @@ function AddressForm({ initialData = {} }) {
                         <SelectGroup id="province" name="province" label="Province"
                             errorMessage={validationError && validationError.province} isError={validationError && validationError.province}
                             onChange={(event) => showResource(showCity, event.target.value, setDropdownData, 'cityData')}  >
-                            {initialData ? <SelectOption id={initialData.provCode} label={initialData.state} /> : <SelectOption id="" label="Select" />}
+                            {initialData.length > 0 ? <SelectOption id={initialData.provCode} label={initialData.state} /> : <SelectOption id="" label="Select" />}
                             {dropdownData.provinceData && dropdownData.provinceData?.map((data) => <SelectOption key={data.provCode} id={data.provCode} label={data.provDesc} />)}
                         </SelectGroup>
                     </div>
@@ -110,14 +110,14 @@ function AddressForm({ initialData = {} }) {
                         <SelectGroup id="city" name="city" label="City"
                             errorMessage={validationError && validationError.city} isError={validationError && validationError.city}
                             onChange={(event) => showResource(showBrgy, event.target.value, setDropdownData, 'brgyData')}  >
-                            {initialData ? <SelectOption id={initialData.cityCode} label={initialData.city} /> : <SelectOption id="" label="Select" />}
+                            {initialData.length > 0 ? <SelectOption id={initialData.cityCode} label={initialData.city} /> : <SelectOption id="" label="Select" />}
                             {dropdownData.cityData && dropdownData.cityData?.map((data) => <SelectOption key={data.citymunCode} id={data.citymunCode} label={data.citymunDesc} />)}
                         </SelectGroup>
                     </div>
                     <div className="w-full">
                         <SelectGroup id="brgy" name="brgy" label="Brgy"
                             errorMessage={validationError && validationError.brgy} isError={validationError && validationError.brgy}  >
-                            {initialData ? <SelectOption id={initialData.brgyCode} label={initialData.brgy} /> : <SelectOption id="" label="Select" />}
+                            {initialData.length > 0 ? <SelectOption id={initialData.brgyCode} label={initialData.brgy} /> : <SelectOption id="" label="Select" />}
                             {dropdownData.brgyData && dropdownData.brgyData?.map((data) => <SelectOption key={data.brgyCode} id={data.brgyCode} label={data.brgyDesc} />)}
                         </SelectGroup>
                     </div>

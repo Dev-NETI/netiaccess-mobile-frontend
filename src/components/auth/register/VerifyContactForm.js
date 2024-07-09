@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { RegisterContext } from '@/stores/RegisterContext'
 import { useContext } from 'react'
-import Input from '@/components/Input'
 import H2 from '@/components/H2'
 import Paragraph from '@/components/Paragraph'
 import Button from '@/components/Button'
@@ -10,20 +9,32 @@ import { generateRandomNumbers } from '@/utils/utils'
 import { handleInputChange } from '@/utils/utils'
 import ProgressBarComponent from '@/components/ProgressBarComponent'
 import VerificationCodeField from '../VerificationCodeField'
+import { useEmail } from '@/hooks/api/email'
 
 function VerifyContactForm({ buttonLabel = "Create Account" }) {
-    const { setTraineeData, handleNextProcess } = useContext(RegisterContext)
+    const { traineeData, setTraineeData, handleNextProcess } = useContext(RegisterContext)
     const [error, setError] = useState(false);
-    const [verificateCode, setVerificationCode] = useState();
-    const [timeLeft, setTimeLeft] = useState(0);
+    const [verificateCode, setVerificationCode] = useState(null);
+    const [timeLeft, setTimeLeft] = useState(60);
     const [progress, setProgress] = useState(100);
+    const { fetchDataWith2Params: sendVerificationCode } = useEmail("send-verification-code")
 
     useEffect(() => {
-        setVerificationCode(generateRandomNumbers());
-    }, [])
-    console.log(verificateCode);
+        if (timeLeft === 60) {
+            setVerificationCode(generateRandomNumbers());
+        }
+    }, [timeLeft])
 
+    useEffect(() => {
+        if (verificateCode !== null) {
+            send()
+            // console.log(verificateCode);
+        }
+    }, [verificateCode])
 
+    const send = async () => {
+        const { data } = await sendVerificationCode(traineeData.email, verificateCode)
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();

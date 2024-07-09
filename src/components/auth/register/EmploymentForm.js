@@ -67,13 +67,13 @@ function EmploymentForm({ initialData = {} }) {
         <form onSubmit={handleSubmit}>
             <div className="w-full">
                 <SelectGroup id="rank" name="rank" label="Rank" errorMessage={validationError && validationError.rank} isError={validationError && validationError.rank}  >
-                    {initialData ? <SelectOption id={initialData.rankId} label={initialData.rank?.rankacronym} /> : <SelectOption id="" label="Select" />}
+                    {initialData.length > 0 ? <SelectOption id={initialData.rankId} label={initialData.rank?.rankacronym} /> : <SelectOption id="" label="Select" />}
                     {dropdownData.rankData && dropdownData.rankData?.map((data) => <SelectOption key={data.rankid} id={data.rankid} label={data.rankacronym} />)}
                 </SelectGroup>
             </div>
             <div className="w-full">
                 <SelectGroup id="company" name="company" label="Company" errorMessage={validationError && validationError.company} isError={validationError && validationError.company}  >
-                    {initialData ? <SelectOption id={initialData.companyId} label={initialData.company?.company} /> : <SelectOption id="" label="Select" />}
+                    {initialData.length > 0 ? <SelectOption id={initialData.companyId} label={initialData.company?.company} /> : <SelectOption id="" label="Select" />}
                     {dropdownData.companyData && dropdownData.companyData?.map((data) => <SelectOption key={data.companyid} id={data.companyid} label={data.company} />)}
                 </SelectGroup>
             </div>
